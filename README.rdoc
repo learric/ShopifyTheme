@@ -11,3 +11,5 @@
 >	Run current version of theme with 'theme open'
 
 >	Edit theme in real time with 'theme watch'
+
+<b>*** Must have config.yml with correct store API and theme number saved locally in current directory ***</b>
