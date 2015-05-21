@@ -1,0 +1,174 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        {% if template == 'index' %}
+            <title>{{ shop.name }} | {{ page_title }}</title>
+        {% elsif template == '404' %}
+            <title>Page Not Found | {{ shop.name }}</title>
+        {% else %}
+            <title>{{ page_title }} | {{ shop.name }}</title>
+        {% endif %}
+
+        {% if page_description %}
+            <meta name="description" content="{{ page_description }}" />
+        {% endif %}
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <link rel="canonical" href="{{ canonical_url }}" />
+        <link rel="icon" href="{{ 'favicon.png' | asset_url }}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ 'apple_touch_icon.png' | asset_url }}">
+
+        {{ content_for_header }}
+
+        {% assign google_font_url = '' %}
+
+        {% assign words = settings.logo_font | split: ',' %}
+        {% assign google_font_url = google_font_url | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':700,900' %}
+
+        {% if settings.heading_font_custom == '' %}
+            {% assign words = settings.heading_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':700' %}
+        {% else %}
+            {% assign words = settings.heading_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':700' %}
+        {% endif %}
+
+        {% if settings.content_font_custom == '' %}
+            {% assign words = settings.content_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':300,400,500,700' %}
+        {% else %}
+            {% assign words = settings.content_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':300,400,500,700' %}
+        {% endif %}
+
+        {% if settings.rte_heading_font_custom == '' %}
+            {% assign words = settings.rte_heading_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':300' %}
+        {% else %}
+            {% assign words = settings.rte_heading_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':300' %}
+        {% endif %}
+
+        {% if settings.rte_paragraph_font_custom == '' %}
+            {% assign words = settings.rte_paragraph_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':400,700' %}
+        {% else %}
+            {% assign words = settings.rte_paragraph_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':400,700' %}
+        {% endif %}
+
+        {% if settings.slideshow_subtitle_font_custom == '' %}
+            {% assign words = settings.slideshow_subtitle_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% else %}
+            {% assign words = settings.slideshow_subtitle_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% endif %}
+
+        {% if settings.slideshow_title_font_custom == '' %}
+            {% assign words = settings.slideshow_title_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% else %}
+            {% assign words = settings.slideshow_title_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% endif %}
+
+        {% if settings.home_section_font_custom == '' %}
+            {% assign words = settings.home_section_font | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% else %}
+            {% assign words = settings.home_section_font_custom | split: ',' %}
+            {% assign google_font_url = google_font_url | append: '|' | append: words.first | replace ' ', '+' | replace: "'", '' | append: ':500,700' %}
+        {% endif %}
+
+        {{ google_font_url | prepend: '//fonts.googleapis.com/css?family=' | stylesheet_tag }}
+
+        {{ 'screen.scss.css' | asset_url | stylesheet_tag }}
+
+        <!--[if lte IE 8]>
+        {{ 'ie8.scss.css' | asset_url | stylesheet_tag }}
+        <![endif]-->
+
+        {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' | script_tag }}
+        {{ 'modernizr-min.js' | asset_url | script_tag }}
+        {{ 'script-ck.js' | asset_url | script_tag }}
+
+        {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+        {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+
+        {% if template contains 'customers' %}
+            {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+            {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+        {% endif %}
+
+<!-- Bold Duplicate And Hide -->
+
+{% if product.metafields.inventory.ShappifyHidden == "true" %}
+
+	<meta name="robots" content="noindex">
+
+{% endif %}
+
+<!-- End Dulplicate And Hide -->
+
+      <script>(function() {
+var _fbq = window._fbq || (window._fbq = []);
+if (!_fbq.loaded) {
+var fbds = document.createElement('script');
+fbds.async = true;
+fbds.src = '//connect.facebook.net/en_US/fbds.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(fbds, s);
+_fbq.loaded = true;
+}
+_fbq.push(['addPixelId', '647919528657828']);
+
+})();
+window._fbq = window._fbq || [];
+window._fbq.push(['track', 'PixelInitialized', {}]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=647919528657828" /></noscript>
+
+
+
+
+  </head>
+
+    <body itemscope itemtype="//schema.org/WebPage" class="{% if template == 'index' %}index {% if settings.home_show_marketing_module %} has-marketing-module {% endif %}{% endif %} {% if settings.enable_slideshow %}has-slideshow{% else %}has-not-slideshow{% endif %}">
+        <div class="page-wrapper" {% if template == 'index' %}style="padding-bottom: 0"{% endif %}>
+            {% include 'header' %}
+
+            {% comment %}
+                For index this is a bit special, as we want to allow each block to have its own color, so we must not wrap
+                around a general container
+            {% endcomment %}
+
+            {% if template == 'index' or template == 'product' %}
+                {{ content_for_layout }}
+            {% else %}
+                <div class="container" role="main">
+                    {{ content_for_layout }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% include 'footer' %}
+
+        {% include 'currencies' %}
+
+        <script>
+            /**
+             * Shopify does not have a way to detect if an asset exist, so we need to rely on this trick
+             */
+            var retinaDoesNotExist = function() {
+                // If the Retina does not exist, we force to show the "normal" logo
+                $('.logo-retina').hide();
+                $('.logo-regular').show().css('display', 'inline-block');
+            };
+        </script>
+    </body>
+</html>

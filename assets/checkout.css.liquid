@@ -1,0 +1,953 @@
+@charset "UTF-8";
+/**
+ * THEME VARIABLES
+ */
+/**
+ * --------------------------------------------------------------------------------
+ * MAESTROOO FRAMEWORK
+ * --------------------------------------------------------------------------------
+ */
+/**
+ * --------------------------------------------------------------------------------
+ * NORMALIZE MODULE
+ *
+ * This is a Sass backport of Normalize.css (http://necolas.github.io/normalize.css/)
+ * with all the old browser crap removed. I decided to include Normalize here because
+ * it's part of all my projects, so it's one less thing to import...
+ *
+ * It is also adapted to use "rem" unit instead of "em"
+ * --------------------------------------------------------------------------------
+ */
+/**
+ * Base
+ */
+@import url({{ settings.heading_font | split: ',' | first | replace: ' ', '+' | replace: "'", '' | prepend: '//fonts.googleapis.com/css?family=' | append: ':400,700' }});
+@import url({{ settings.content_font | split: ',' | first | replace: ' ', '+' | replace: "'", '' | prepend: '//fonts.googleapis.com/css?family=' | append: ':400,700' }});
+html {
+  font-family: sans-serif;
+  text-size-adjust: 100%; }
+
+body {
+  margin: 0; }
+
+/**
+ * HTML5 display definitions
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+nav,
+section,
+summary {
+  display: block; }
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  vertical-align: baseline; }
+
+audio:not([controls]) {
+  display: none;
+  height: 0; }
+
+[hidden],
+template {
+  display: none; }
+
+/**
+ * Links
+ */
+a {
+  background-color: transparent; }
+
+a:active, a:hover {
+  outline: 0; }
+
+/**
+ * Text-level semantic
+ */
+abbr[title] {
+  border-bottom: 1px dotted; }
+
+b,
+strong {
+  font-weight: bold; }
+
+dfn {
+  font-style: italic; }
+
+h1 {
+  font-size: 2rem;
+  margin: 0.67rem 0; }
+
+mark {
+  background: #ff0;
+  color: #000; }
+
+small {
+  font-size: 80%; }
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sup {
+  top: -0.5rem; }
+
+sub {
+  bottom: -0.25rem; }
+
+/**
+ * Embedded content
+ */
+img {
+  border: 0; }
+
+svg:not(:root) {
+  overflow: hidden; }
+
+/**
+ * Grouping content
+ */
+figure {
+  margin: 1rem 40px; }
+
+hr {
+  box-sizing: content-box;
+  height: 0; }
+
+pre {
+  overflow: auto; }
+
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1rem; }
+
+/**
+ * Forms
+ */
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0; }
+
+button {
+  overflow: visible; }
+
+button,
+select {
+  text-transform: none; }
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer; }
+
+button[disabled],
+html input[disabled] {
+  cursor: default; }
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+input {
+  line-height: normal; }
+
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0; }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto; }
+
+input[type="search"] {
+  -webkit-appearance: none;
+  box-sizing: content-box; }
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35rem 0.625rem 0.75rem; }
+
+legend {
+  border: 0;
+  padding: 0; }
+
+textarea {
+  overflow: auto; }
+
+optgroup {
+  font-weight: bold; }
+
+/**
+ * Tables
+ */
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+td,
+th {
+  padding: 0; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * VERTICAL RHYTHM MODULE
+ *
+ * This module provides font-unit conversions, and automatically establish
+ * baseline with given arguments
+ * --------------------------------------------------------------------------------
+ */
+/**
+ * This function is used to convert a px unit into rem. It takes into account the
+ * base font size for its calculation. You can also use this method to output multiple
+ * arguments:
+ *
+ *    padding: em(10px 15px)
+ */
+/**
+ * Mixin that allows to adjust both the font size and the line-height to the desired value in pixels
+ */
+/**
+ * Establish the baseline on the root element
+ */
+html {
+  font-size: 100%;
+  line-height: 1.5; }
+
+/**
+ * Avoid top margins on first elements and bottom margin and last elements to preserve vertical rhythm
+ */
+p:first-child, ul:first-child, ol:first-child, dl:first-child, blockquote:first-child,
+pre:first-child, h1:first-child, h2:first-child, h3:first-child, h4:first-child,
+h5:first-child, h6:first-child {
+  margin-top: 0; }
+
+p:last-child, ul:last-child, ol:last-child, dl:last-child, blockquote:last-child,
+pre:last-child, h1:last-child, h2:last-child, h3:last-child, h4:last-child,
+h5:last-child, h6:last-child {
+  margin-bottom: 0; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * TYPOGRAPHY MODULE
+ * --------------------------------------------------------------------------------
+ */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+*, *::before, *::after {
+  box-sizing: border-box !important; }
+
+html {
+  font-family: {{settings.content_font}};
+  font-weight: 400; }
+
+/**
+ * Most of the time, I want to remove any style from the links, and I usually style them
+ * using project-specific classes
+ */
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer; }
+  a:active, a:focus {
+    outline: none; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * BUTTONS MODULE
+ * --------------------------------------------------------------------------------
+ */
+.button, #buttons input {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 0.875em 1.875em 0.9375em 1.875em;
+  border: 1px solid #cccccc;
+  color: #4d4d4d;
+  background: #f9f8f8;
+  border-radius: 0.1875em;
+  cursor: pointer !important;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9375em;
+  line-height: normal; }
+  .button:active, #buttons input:active {
+    top: 1px; }
+  .button:focus, #buttons input:focus, .button:active, #buttons input:active {
+    outline: none; }
+
+.button-small {
+  padding: 0.375em 0.75em;
+  font-size: 0.875em;
+  border-radius: 0.1875em; }
+
+.button-large {
+  padding: 1em 2.1875em;
+  font-size: 1.25em;
+  border-radius: 0.1875em; }
+
+.button-rounded {
+  border-radius: 1em; }
+
+.button-full {
+  width: 100% !important; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * FORM MODULE
+ *
+ * This module is actually quite big, but I have refined it since a long time, and
+ * it proved to be working for me nearly all the time. If I need very specific form
+ * styling, this is always related to a given project, so I just end up writing
+ * specific classes
+ * --------------------------------------------------------------------------------
+ */
+/**
+ * Standard styling (labels on top)
+ */
+.form-control {
+  position: relative;
+  margin-bottom: 1.25em; }
+  .form-control:last-child {
+    margin-bottom: 0; }
+  .form-control > label {
+    display: block;
+    margin: 0 0 0.625em 0;
+    font-weight: 600;
+    font-size: 12px;
+    color: {{settings.label_color}};
+    text-transform: uppercase; }
+
+input {
+  background: {{settings.input_background_color}};
+  font-size: 13px; }
+  input[type="checkbox"], input[type="radio"] {
+    width: 1em !important;
+    height: 1em !important;
+    margin-right: 0.625em; }
+  input[type="submit"], input[type="reset"] {
+    width: auto; }
+
+textarea {
+  display: block;
+  font-size: 13px; }
+
+input:focus, textarea:focus {
+  outline: none; }
+
+input[type="email"], input[type="number"], input[type="password"], input[type="search"],
+input[type="tel"], input[type="text"], input[type="url"], textarea {
+  width: 100%;
+  padding: 0.75em 0.75em;
+  border: 1px solid {{settings.input_border_color}};
+  border-radius: 0.1875em;
+  color: {{settings.input_color}};
+  -webkit-appearance: none;
+  /* Remove the inner box-shadow in iOS devices */ }
+  input[type="email"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus,
+  input[type="tel"]:focus, input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
+    border: 1px solid {{settings.input_border_color_focus}};
+    color: {{settings.input_color_focus}}; }
+
+::placeholder {
+  color: {{settings.input_placeholder_color}}; }
+
+/**
+ * Use Flexbox for aligning multiple form controls or inputs
+ */
+.form-control-row, .input-row {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  box-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  -o-justify-content: space-between;
+  justify-content: space-between;
+  -ms-flex-pack: justify; }
+
+.input-row > input,
+.input-row > textarea,
+.input-row > .styled-select,
+.form-control-row > .form-control {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin-right: 0.9375em; }
+  .input-row > input:last-child,
+  .input-row > textarea:last-child,
+  .input-row > .styled-select:last-child,
+  .form-control-row > .form-control:last-child {
+    margin-right: 0; }
+
+/**
+ * Style selects (this only works in IE10+, FF and Webkit browsers)
+ */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: inline-block;
+  width: 100%;
+  padding: 0.75em 0.75em;
+  border: 1px solid {{settings.input_border_color}};
+  border-radius: 0.1875em;
+  color: {{settings.input_color}};
+  background: {{settings.input_background_color}};
+  font-size: 13px;
+  line-height: normal;
+  text-indent: 0.01px;
+  text-overflow: '';
+  cursor: pointer; }
+  select:active, select:focus {
+    outline: none; }
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 {{settings.input_color}}; }
+
+select::-ms-expand {
+  display: none; }
+
+.styled-select, .selector-wrapper {
+  position: relative; }
+  .styled-select::after, .selector-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    width: 0;
+    height: 0;
+    margin-top: -1px;
+    border-top: 4px solid {{settings.input_color}};
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    pointer-events: none; }
+
+.selector-wrapper::after {
+  top: 60%; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * LIST MODULE
+ * --------------------------------------------------------------------------------
+ */
+.unstyled-list {
+  list-style: none;
+  padding-left: 0; }
+
+li > ul, li > ol {
+  margin-bottom: 0; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * TABLE MODULE
+ * --------------------------------------------------------------------------------
+ */
+table {
+  width: 100%; }
+
+th, td {
+  padding: 0.375em;
+  text-align: left; }
+
+/**
+ * Cell alignments
+ */
+[colspan] {
+  text-align: center; }
+
+[colspan="1"] {
+  text-align: left; }
+
+[rowspan] {
+  vertical-align: middle; }
+
+[rowspan="1"] {
+  vertical-align: top; }
+
+/**
+ * Bordered tables
+ */
+.table-bordered th, .table-bordered td {
+  border: 1px solid #000000; }
+  .table-bordered th:empty, .table-bordered td:empty {
+    border: none; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * NAV COMPONENT
+ *
+ * Minimal component for implement a horizontal or vertical navigation, based
+ * on ordered or unordered lists
+ * --------------------------------------------------------------------------------
+ */
+.nav ul, .breadcrumb ul, .nav ol, .breadcrumb ol {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0; }
+  .nav ul > li, .breadcrumb ul > li, .nav ul > li > a, .breadcrumb ul > li > a, .nav ol > li, .breadcrumb ol > li, .nav ol > li > a, .breadcrumb ol > li > a {
+    display: inline-block; }
+
+.nav-stacked ul > li, .nav-stacked ol > li {
+  display: block; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * BREADCRUMB COMPONENT
+ *
+ * Extend the navigation component to implement a breadcrumb. To use it, just
+ * add a data attribute to specify the character to use as a separator
+ * --------------------------------------------------------------------------------
+ */
+.breadcrumb {
+  overflow: hidden; }
+  .breadcrumb li {
+    float: left; }
+  .breadcrumb li + li:before {
+    content: "\00A0" "\00BB" "\00A0"; }
+  .breadcrumb li + li[data-breadcrumb-separator]:before {
+    content: " " attr(data-breadcrumb-separator) " "; }
+
+/**
+ * --------------------------------------------------------------------------------
+ * PANEL COMPONENT
+ * --------------------------------------------------------------------------------
+ */
+.cover {
+  position: relative;
+  margin: 0; }
+  .cover > .cover-image {
+    max-width: 100%; }
+  .cover > .cover-text {
+    position: absolute;
+    width: 100%;
+    margin: 0 auto;
+    left: 0;
+    top: 0; }
+
+body, #container {
+  font-family: {{settings.content_font}};
+  background: {{settings.main_background_color}};
+  color: {{settings.main_font_color}};
+  /* {% if settings.use_background_pattern %} */
+  background: url({{'background_pattern.png' | asset_url}}) repeat;
+  /* {% endif %} */ }
+
+h1, h2, h3, h4, h5, h6, #email label {
+  font-family: {{settings.heading_font}}; }
+
+body {
+  padding-bottom: 0;
+  /* {% if settings.use_background_pattern %} */
+  background: url({{'background_pattern.png' | asset_url}}) repeat;
+  /* {% endif %} */ }
+
+a {
+  -webkit-transition: all, 0.5s;
+  -moz-transition: all, 0.5s;
+  transition: all, 0.5s; }
+  a:hover {
+    text-decoration: none; }
+
+#container {
+  width: auto;
+  background: none;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px; }
+  #container:after {
+    content: " ";
+    display: block;
+    clear: both; }
+
+#main, #container.slim #main {
+  width: auto;
+  padding: 0;
+  background: none; }
+
+#container.slim #main {
+  width: 430px; }
+
+#header {
+  width: 100%;
+  margin-top: 62px;
+  background: {{settings.header_background}};
+  border-radius: 3px; }
+
+.slim #header {
+  margin-top: 0; }
+
+.slim #footer {
+  border: 0; }
+
+#container.slim #header, #container.slim #main, #container.slim #footer {
+  background: {{settings.main_background_color}};
+  /* {% if settings.use_background_pattern %} */
+  background: url({{'background_pattern.png' | asset_url}}) repeat;
+  /* {% endif %} */ }
+
+#tagline {
+  margin: 18px 0 16px 25px; }
+  #tagline .subtitle {
+    font-family: {{settings.content_font}};
+    float: right;
+    padding-right: 35px;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: {{settings.header_font_color}}; }
+
+/* {% if settings.use_logo %} */
+#tagline .title {
+  background: url({{ 'logo.png' | asset_url }}) no-repeat;
+  height: 100%;
+  width: 50%;
+  display: inline-block;
+  text-indent: -9999em;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain; }
+
+/* {% else %} */
+#tagline .title {
+  color: #ffffff; }
+
+/* {% endif %} */
+.slim #tagline {
+  margin: 100px 0 0 0;
+  padding: 0;
+  text-align: center; }
+  .slim #tagline .title {
+    display: block;
+    width: 100%;
+    background: none;
+    text-indent: 0;
+    margin-bottom: 8px;
+    font-family: {{settings.content_font}};
+    font-weight: 400;
+    font-size: 36px;
+    color: {{settings.heading_color}}; }
+  .slim #tagline .subtitle {
+    float: none;
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-style: italic; }
+
+.field-with-errors {
+  background: none;
+  border: none; }
+  .field-with-errors .error-message {
+    padding-bottom: 10px;
+    display: inline-block;
+    color: #e35e5e;
+    font-size: 14px; }
+  .field-with-errors input {
+    color: #e35e5e;
+    border: 1px solid #fb9f9f; }
+
+select {
+  -webkit-appearance: menulist;
+  height: 25px;
+  width: 80%; }
+
+.severe-error {
+  margin: 35px 0;
+  padding: 20px 30px 18px 30px;
+  border-radius: 3px;
+  border: 1px solid #fb9f9f;
+  background: #fde3e3; }
+  .severe-error, .severe-error .alert-title, .severe-error p, .severe-error small {
+    color: #df2828;
+    display: block;
+    font-size: 15px; }
+
+#info-bar {
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid #e0c980;
+  color: #c29302;
+  font-size: 15px; }
+  #info-bar span {
+    padding-left: 10px; }
+
+#overview {
+  margin-top: 50px;
+  padding: 0;
+  background: {{settings.main_background_color}};
+  border: 1px solid {{settings.main_border_color}};
+  /* {% if settings.use_background_pattern %} */
+  background: url({{'background_pattern.png' | asset_url}}) repeat;
+  /* {% endif %} */ }
+  #overview h2 {
+    padding: 24px 30px 18px 30px;
+    border-bottom: 1px solid {{settings.main_border_color}};
+    color: #a6a6a6;
+    font-size: 15px; }
+
+#thumbs {
+  margin-top: 0;
+  padding: 15px 0;
+  background: {{settings.main_background_color}}; }
+  #thumbs div {
+    margin-right: 20px;
+    border: none; }
+  #thumbs img {
+    border: 1px solid #e4e3e3; }
+  #thumbs td {
+    padding: 30px 12px 30px 30px; }
+  #thumbs .plisthead {
+    font-size: 13px;
+    font-weight: 400; }
+  #thumbs .plist-line-price {
+    display: block;
+    margin-top: 9px;
+    color: {{settings.main_font_color}};
+    font-size: 12px; }
+
+#cost, #steps {
+  font-family: {{settings.content_font}}; }
+
+#steps {
+  text-transform: uppercase;
+  font-style: normal;
+  font-size: 15px; }
+
+#products {
+  width: 48.93617%;
+  float: left;
+  margin-right: 2.12766%;
+  border-color: {{settings.main_border_color}}; }
+
+#wallet {
+  width: 48.93617%;
+  float: right;
+  margin-right: 0;
+  margin-left: 0;
+  padding: 50px 0 0 0;
+  text-align: center; }
+
+#cost {
+  color: {{settings.heading_color}};
+  text-shadow: none;
+  font-size: 36px;
+  margin-bottom: -15px; }
+
+span.sign-in-message {
+  margin-left: 18px; }
+
+#content {
+  margin-top: 70px;
+  padding: 0; }
+
+#email {
+  padding: 0 0 40px 0;
+  border: 0;
+  background: none;
+  border-bottom: 1px solid {{settings.main_border_color}}; }
+  #email input {
+    width: 48%; }
+  #email .active-customer {
+    padding-left: 15px;
+    display: inline-block;
+    color: {{settings.main_font_color}};
+    font-size: 14px; }
+  #email label {
+    margin-bottom: 30px; }
+
+#email label, #addresses h3, #payment h3, #payment-method h3, #newsletter h3 {
+  border: 0;
+  color: {{settings.heading_color}};
+  text-shadow: none;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 400; }
+
+#addresses {
+  margin-top: 30px;
+  padding: 0;
+  background: none;
+  border: 0; }
+  #addresses .lbl {
+    padding: 0;
+    vertical-align: middle; }
+  #addresses label {
+    display: block;
+    font-weight: 400;
+    font-size: 14px; }
+  #addresses input {
+    width: 80%;
+    font-size: 14px; }
+  #addresses .inline input, #addresses .inline select {
+    margin-top: 15px; }
+
+.form td {
+  padding: 13px 0; }
+
+#billing-is-shipping td {
+  text-align: left; }
+#billing-is-shipping label {
+  display: inline-block; }
+
+#overview .hint {
+  display: block;
+  padding: 30px 0 0 0;
+  font-size: 14px;
+  font-style: italic;
+  color: {{settings.main_font_color}}; }
+  #overview .hint ~ .hint {
+    margin-top: -12px;
+    padding-top: 0; }
+
+br + #tax_span {
+  padding-top: 0 !important; }
+
+#shipping-same {
+  margin-top: 27px;
+  padding: 20px;
+  border-color: #e6d06a;
+  background: #fcf8e5;
+  border-radius: 3px;
+  color: #cca223;
+  font-size: 14px; }
+
+.button-submit, #buttons input, .button-submit:active, #buttons input:active, .button-submit:focus, #buttons input:focus {
+  padding: 11px 15px 10px 15px;
+  background: {{settings.primary_button_background}};
+  color: {{settings.primary_button_color}};
+  border: none;
+  text-transform: uppercase; }
+  .button-submit:hover, #buttons input:hover, .button-submit:active:hover, #buttons input:active:hover, .button-submit:focus:hover, #buttons input:focus:hover {
+    background: {{settings.primary_button_background_hover}};
+    color: {{settings.primary_button_color_hover}}; }
+
+#buttons {
+  margin-top: 32px;
+  padding: 40px 0 0 0;
+  background: none;
+  border-bottom: 0;
+  border-top: 1px solid {{settings.main_border_color}}; }
+
+.step2 #buttons {
+  border: 0;
+  margin-top: 25px; }
+
+#cancel-purchase {
+  margin-left: 30px;
+  font-size: 14px; }
+
+.step2 #content {
+  margin-top: 40px; }
+.step2 #payment, .step2 #payment-method, .step2 #newsletter {
+  border-bottom: 1px solid {{settings.main_border_color}};
+  padding: 0 0 15px 0;
+  overflow: hidden; }
+.step2 #newsletter {
+  padding-bottom: 35px; }
+.step2 #payment .group, .step2 #payment-method .group, .step2 #newsletter .group {
+  width: 65.95745%;
+  float: left;
+  margin-right: 2.12766%;
+  padding: 0;
+  background: {{settings.main_background_color}};
+  border: 0;
+  font-size: 14px;
+  /* {% if settings.use_background_pattern %} */
+  background: url({{'background_pattern.png' | asset_url}}) repeat;
+  /* {% endif %} */ }
+
+.slim #content {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 14px; }
+  .slim #content .group {
+    background: none;
+    padding: 30px 20px; }
+  .slim #content p:first-child {
+    font-size: 24px;
+    color: {{settings.heading_color}}; }
+
+#payment-methods {
+  padding: 13px 27px;
+  background: {{settings.header_background}};
+  border: 1px solid {{settings.main_border_color}};
+  border-radius: 6px; }
+
+#credit-card-info {
+  margin-left: 320px;
+  width: 60%; }
+  #credit-card-info td {
+    padding: 0 25px 10px 0;
+    text-align: left; }
+  #credit-card-info label {
+    display: block;
+    font-weight: 400; }
+  #credit-card-info .hint {
+    display: block;
+    padding-top: 10px; }
+
+#credit_card_verification_value {
+  margin-top: 10px; }
+
+#payment-method .group, #newsletter .group {
+  margin: 30px 0 0 0;
+  padding-bottom: 30px; }
+
+.slim .images {
+  float: left;
+  margin-right: 15px; }
+
+#footer {
+  margin: 100px 0 0 0;
+  padding: 18px 0;
+  width: auto;
+  background: {{settings.header_background}};
+  border: 1px solid {{settings.main_border_color}};
+  border-bottom: 0;
+  font-size: 12px;
+  text-transform: uppercase; }
+  #footer p {
+    color: {{settings.header_font_color}}; }

@@ -1,0 +1,386 @@
+<!-- Bold Duplicate And Hide -->
+
+{% if product.metafields.inventory.ShappifyHidden == "true" %}
+
+	Product is not available
+
+	{% break %}
+
+{% endif %}
+
+<!-- End Duplicate And Hide -->
+
+<div class="container">
+    {% if collection %}
+        <div class="product-breadcrumb">
+            {% unless settings.disable_breadcrumbs %}
+            <nav class="breadcrumb">
+                <ol>
+                    <li itemscope itemtype="//data-vocabulary.org/Breadcrumb">
+                        <a href="/" itemprop="url"><span itemprop="title">{{ 'general.breadcrumbs.home' | t }}</span></a>
+                    </li>
+
+                    <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/">
+                        <a href="/collections" itemprop="url"><span itemprop="title">{{ 'general.breadcrumbs.collections' | t }}</span></a>
+                    </li>
+
+                    <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/">
+                        <a href="{{ collection.url }}" itemprop="url"><span itemprop="title">{{ collection.title }}</span></a>
+                    </li>
+
+                    <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/" class="active">
+                        <meta itemprop="url" content="{{ product.url }}">
+                        <span itemprop="title">{{ product.title }}</span>
+                    </li>
+                </ol>
+            </nav>
+            {% endunless %}
+
+            <a href="{{ collection.url }}" class="back right"><i class="icon-arrow-left"></i>{{ 'products.product.back' | t }}</a>
+        </div>
+    {% endif %}
+
+
+    <section class="product" itemscope itemtype="//schema.org/Product">
+        <meta itemprop="url" content="{{ shop.url }}{{ product.url }}" />
+        <meta itemprop="image" content="{{ product.featured_image.src | product_img_url: 'grande' }}" />
+        <div class="details show-mobile">
+            <div class="header">
+                {% include 'product-details-header' %}
+                {% include 'product-offers' %}
+            </div>
+        </div>
+        <section class="showcase">
+            <div class="featured-image">
+                {% if product.compare_at_price_max > product.price %}
+                    <span class="on-sale">{{ 'products.product.on_sale' | t }}</span>
+                {% endif %}
+
+                {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+
+                <a href="{{ featured_image | img_url: 'original' }}" data-id="{{ featured_image.id }}" rel="gallery">
+                    <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}">
+                </a>
+            </div>
+
+        </section>
+
+        <section class="details">
+
+        {% if settings.show_product_share_buttons %}
+                {% include 'sharing-buttons' %}
+            {% endif %}
+
+            <div class="header hide-mobile">
+                {% include 'product-details-header' %}
+                {% include 'product-offers' %}
+            </div>
+
+            {% if product.available %}
+
+<!-- Bold Duplicate And Hide Added to Form -->
+
+                <form action="/cart/add" method="post" class="add-to-cart-form shappify_add_to_cart_form" data-product-id="{{ product.id }}" enctype="multipart/form-data">
+
+<!-- Bold: Options -->
+
+{% include 'shappify-options' %}
+
+<!-- End Bold: Options -->
+
+                    {% if product.variants.size > 1 %}
+                        <div class="variants form-control {% if product.options.size > 1 %}multi-options{% endif %}">
+                            {% if product.options.size == 1 %}
+                                <label for="product-select-option-0">{{ product.options[0] }}</label>
+                            {% endif %}
+
+                            <select id="product-select" name="id" style="display: none">
+                                {% for variant in product.variants %}
+                                    <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+                                {% endfor %}
+                            </select>
+
+                            {% include 'swatch' with 'Color' %}
+                        </div>
+                    {% else %}
+                        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    {% endif %}
+
+                    <div class="quantity form-control">
+                        <label for="quantity">{{ 'products.product.quantity' | t }}</label>
+                        <input type="number" pattern="[0-9]*" name="quantity" class="quantity-input" min="1" value="1" required="required">
+                    </div>
+
+                    <div class="button-add-to-cart-container">
+                        <button type="submit" class="button button-full button-add-to-cart">
+                            {{ 'products.product.add_to_cart' | t }}
+                        </button>
+
+                        {% if settings.product_for_more_information_text != blank %}
+                            <p>{{ settings.product_for_more_information_text }}</p>
+                        {% endif %}
+                    </div>
+                </form>
+            {% endif %}
+
+
+            {% if settings.product_enable_back_in_stock %}
+                <div class="back-in-stock {% if product.available == true %}product-available{% endif %}">
+                    <div class="alert-box alert-error" style="display: none">
+                        <h3 class="alert-title">{{ 'general.forms.oops' | t }}</h3>
+                        <p class="message"></p>
+                    </div>
+
+                    <div class="alert-box alert-success" style="display: none">
+                        <h3 class="alert-title">{{ 'products.back_in_stock.thank_you' | t }}</h3>
+                        <p class="message"></p>
+                    </div>
+
+                    <form action="#" class="back-in-stock-form" method="post">
+                        <p>{{ 'products.back_in_stock.notify' | t }}</p>
+
+                        <div class="control-group">
+                            <input type="email" name="email" class="bis-email-input" placeholder="{{ 'products.back_in_stock.email_placeholder' | t }}" style="width: 58%">
+                            <button type="submit" class="button button-secondary button-submit" style="width: 40%">{{ 'products.back_in_stock.submit' | t }}</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+
+
+
+        </section>
+
+    </section>
+
+    {% if collection %}
+        <div class="product-navigation">
+            {% if collection.previous_product %}
+                <a href="{{ collection.previous_product }}" class="left" rel="prev">
+                    <i class="icon-arrow-left"></i>{{ 'products.pagination.previous_product' | t }}
+                </a>
+            {% endif %}
+
+            {% if collection.next_product %}
+                <a href="{{ collection.next_product }}" class="right" rel="next">
+                    {{ 'products.pagination.next_product' | t }}<i class="icon-arrow-right"></i>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% if settings.product_show_related_products %}
+    {% include 'related-products' %}
+{% endif %}
+
+<div class="LM-prodCustReviews">
+
+		<div class="product-info">
+
+		    {% if product.description != blank %}
+		        <div class="description" itemscope="description">
+		            <h3 class="product-info-title">{{ 'products.product.description' | t }}</h3>
+
+		            <div class="rte">
+		                {{ product.description }}
+		            </div>
+		        </div>
+		    {% endif %}
+
+		    {% if settings.product_shipping_info != blank %}
+		        <div class="shipping">
+		            <h3 class="product-info-title">{{ 'products.product.shipping' | t }}</h3>
+		            <p class="rte">{{ settings.product_shipping_info }}</p>
+		        </div>
+		    {% endif %}
+		</div>
+
+	<div class="LM-customerReviews">
+		<div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+	</div>
+
+</div>
+
+<div class="LM-FAQ">
+
+	<p>Frequently Asked Questions</p>
+
+	<ul class="LM-accordions">
+		<li><a href="#">Sizing Chart</a>
+			<ul>
+				<li><span class="sizingKey">Chart Key<br />A&nbsp;-&nbsp;Width&nbsp;&nbsp;|&nbsp;&nbsp;B&nbsp;-&nbsp;Height&nbsp;&nbsp;|&nbsp; C&nbsp;-&nbsp;Sleeve&nbsp;(Center&nbsp;to&nbsp;Back)</span>
+					<span><img src="{{ 'sizinghoodie.png' | asset_url }}" alt="{{ shop.name }}"></span>
+					<span><img src="{{ 'sizinglong.png' | asset_url }}" alt="{{ shop.name }}"></span>
+					<span><img src="{{ 'sizingshirt.png' | asset_url }}" alt="{{ shop.name }}"></span>
+					<span><img src="{{ 'sizingtank.png' | asset_url }}" alt="{{ shop.name }}"></span>
+				</li>
+			</ul>
+		</li>
+		<li><a href="#">When will my shirt arrive after ordering?</a>
+			<ul>
+				<li>Our products are produced on demand so it depends. Maybe in a few days, maybe not for a few weeks. All items usually get printed and shipped less than 24-48 hours after you order. Once we ship your order, it should get to you in a few days (United States) or a few weeks (everywhere else). We’ll send you an email when it ships. If you're still not sure, just email us. We're happy to clear things up.</li>
+			</ul>
+		</li>
+		<li><a href="#">What is your refund/exchange policy?</a>
+			<ul>
+				<li>If there’s something wrong with your order ( wrong shirt, defective product, etc.), return it to us unworn and unwashed within 15 days of delivery and we’ll be happy to issue a refund or replacement. Exchanges are a little more difficult since we print close to exact quantities of what we need. We usually order a few extras, but they go fast. If you need an exchange, email us and we’ll see what we can do.</li>
+			</ul>
+		</li>
+	</ul>
+
+	<script type="text/javascript">
+
+		jQuery(function() {
+	        var accTitle = jQuery('.LM-accordions li a');
+	        var accContent = jQuery('.LM-accordions li a').next();
+
+	        accContent.hide();
+
+	        accTitle.on('click', function (event) {
+	        	event.preventDefault();
+	        	event.stopPropagation();
+
+	        	accContent.slideUp();
+
+	        	if (jQuery(this).next().is(':hidden')) {
+	        		jQuery(this).next().slideDown();
+	        	} else {
+	        		jQuery(this).next().slideUp();
+	        	}
+	        });
+
+	        jQuery(document).on('click', function () {
+	        	accContent.slideUp();
+	        });
+	    });
+
+	</script>
+
+</div>
+
+<script>
+    var switchImage = function(new_image_src, new_image, original_image) {
+        $(original_image).parents('a').attr('href', new_image_src.replace('_large', '_1024x1024'));
+        $(original_image).attr('src', new_image_src);
+    };
+
+    var selectCallback = function(variant, selector) {
+        if (variant) {
+            for (i = 0 ; i < variant.options.length ; i++) {
+                var radioButton = jQuery('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+
+                if (radioButton.size()) {
+                    radioButton.closest('.swatch-element').addClass('active');
+                    radioButton.get(0).checked = true;
+                }
+            }
+
+            if (variant.featured_image) {
+                var original_image = $(".featured-image img")[0], new_image = variant.featured_image;
+                Shopify.Image.switchImage(new_image, original_image, switchImage);
+            }
+
+            $('.button-add-to-cart-container').show(); // In case it has been hidden when variant is unavailable
+
+            if (!variant.available) {
+                // variant doesn't exist
+                $('.quantity').hide();
+                $('.button-add-to-cart').text({{ 'products.product.sold_out' | t | json }}).attr('disabled', 'disabled');
+                $('.offers .price-container').html('<span class="sold-out-label">' + {{ 'products.product.sold_out' | t | json }} + '</span>');
+                $('.back-in-stock').show();
+            } else {
+                // update price field
+                var priceContainer = $('.offers p');
+
+                if (variant.compare_at_price) {
+                    var percentDrop = (variant.compare_at_price - variant.price) / variant.compare_at_price * 100;
+                    var containerContent = '<span class="old-price price money">' + Shopify.formatMoney(variant.compare_at_price, "{{shop.money_format}}") + '</span>' +
+                            '<span class="new-price price money">' + Shopify.formatMoney(variant.price, "{{shop.money_format}}") + '</span>';
+
+                    if (percentDrop > 0) {
+                        containerContent += '<span class="sale-percent">' + -Math.round(percentDrop) + '%</span>';
+                    }
+
+                    // If the previous variant was already on sale, just change the values
+                    priceContainer.html(containerContent);
+                } else {
+                    priceContainer.html('<span class="price money">' + Shopify.formatMoney(variant.price, "{{shop.money_format}}") + '</span>');
+                }
+                $('.quantity').show();
+                $('.button-add-to-cart').text({{ 'products.product.add_to_cart' | t | json }}).removeAttr('disabled');
+                $('.back-in-stock').hide();
+            }
+        } else {
+            // variant doesn't exist
+            $('.quantity, .button-add-to-cart-container').hide(); // set add-to-cart button to unavailable class and disable button
+            $('.offers .price-container').html('<span class="sold-out-label">' + {{ 'products.product.unavailable' | t | json }} + '</span>');
+        }
+    };
+
+    jQuery(function() {
+        var optionSelectors = new Shopify.OptionSelectors('product-select', { product: {{ product | json }}, onVariantSelected: selectCallback, enableHistoryState: true });
+        optionSelectors.selectVariant({{ product.selected_or_first_available_variant.id }});
+
+        Shopify.Image.preload({{ product.images | json }}, '1024x1024');
+    });
+
+    jQuery(function() {
+        jQuery('.swatch-element').on('click', function() {
+            var optionIndex = jQuery(this).parents('.swatch').attr('data-option-index');
+            var optionValue = jQuery(this).children('[type="radio"]').val();
+            var context = jQuery(this).closest('form');
+            jQuery('.single-option-selector', context).eq(optionIndex).find('option').filter(function() { return jQuery(this).text() == optionValue }).parent().val(optionValue).trigger('change');
+        });
+    });
+
+    // Bind events on hover on images so that the featured image changes
+    var featuredImageLinks = $('.featured-image > a');
+
+    {% if settings.product_change_image_on_click %}
+        $('.image-list img').click(function(event) {
+    {% else %}
+        $('.image-list img').hover(function(event) {
+    {% endif %}
+            var original_image = $(".featured-image img")[0], new_image = new Image();
+            new_image.src = $(this)[0].src.replace('_small', '');
+            Shopify.Image.switchImage(new_image, original_image, switchImage);
+
+            return false;
+        });
+
+    // Add the fancy box
+    $('.image-list a, .featured-image a').fancybox();
+</script>
+
+
+{% if settings.product_enable_back_in_stock %}
+    <script>
+        _BISConfig = { button: { visible: false } };
+
+        $('.back-in-stock-form').submit(function(event) {
+            event.preventDefault();
+
+            var email = $(event.target).find('input').val();
+            variantId = $('[name=id]').val() || {{ product.variants.first.id }};
+
+            BISPopover.create(email, variantId).then(function(data) {
+                var msg = '';
+                $('.back-in-stock .alert-box').hide();
+
+                if (data.status == 'OK') {
+                    msg = data.message; // just show the success message
+                    $('.back-in-stock .alert-success').show().find('.message').text(msg);
+                    $('.back-in-stock-form').hide();
+                } else { // it was an error
+                    for (var k in data.errors) {  // collect all the error messages into a string
+                        msg += data.errors[k].join();
+                    }
+
+                    $('.back-in-stock .alert-error').show().find('.message').text(msg);
+                }
+            });
+        });
+
+    </script>
+{% endif %}

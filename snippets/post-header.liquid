@@ -1,0 +1,18 @@
+<header>
+    <h2 class="post-headline" itemprop="headline">
+        <a href="{{ post.url }}">{{ post.title }}</a>
+    </h2>
+
+    <div class="post-meta">
+        {% capture author %}<span itemprop="author">{{ post.author }}</span>{% endcapture %}
+        {% capture date %}<time datetime="{{ post.published_at | date: "%Y-%m-%dT%T" }}" itemprop="dateCreated">{{ post.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+        <p>{{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}</p>
+
+        {% if blog.comments_enabled? %}
+            <meta itemprop="interactionCount" content="UserComments:{{ post.comments_count }}">
+            <a href="{{ post.url }}#post-comments" class="comment-count">
+                {{ 'blogs.comments.comments_with_count' | t: count: post.comments_count }}
+            </a>
+        {% endif %}
+    </div>
+</header>

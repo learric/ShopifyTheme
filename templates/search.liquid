@@ -1,0 +1,82 @@
+<div class="search-results">
+    {% capture header_captured_content %}
+    <div class="captured-header">
+        <div class="inner">
+            <div class="navigation">
+                {% unless settings.disable_breadcrumbs %}
+                    <nav class="breadcrumb">
+                        <ul>
+                            <li>
+                                <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                            </li>
+
+                            <li data-breadcrumb-separator="/" class="active">
+                                {{ 'general.search.title' | t }}
+                            </li>
+                        </ul>
+                    </nav>
+                {% endunless %}
+
+                {% if search.performed %}
+                    <span class="product-count">{{ 'general.search.search_with_count' | t: count: search.results_count, term: search.terms }}</span>
+                {% endif %}
+            </div>
+
+            <div class="categorization">
+                <h1 class="title">{% if search.performed %}{{ 'general.search.search_results' | t }}{% else %}{{ 'general.search.search' | t }}{% endif %}</h1>
+
+                {% if search.performed %}
+                    <span class="search-terms">{{ 'general.search.results_for' | t: term: search.terms }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endcapture %}
+
+    {% paginate search.results by settings.collection_items_per_page %}
+
+    <div class="inner">
+        {% if search.results_count == 0 %}
+            {% if search.performed %}
+                <p>{{ 'general.search.no_results' | t }}</p>
+            {% endif %}
+
+            <form action="/search" method="get" class="search-form" role="search">
+                <i class="icon-search"></i>
+                <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms | escape }}">
+            </form>
+
+            <a href="/" class="button button-primary">{{ 'general.search.back' | t }}</a>
+        {% else %}
+            <ul class="product-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-{{ settings.collection_items_per_row }}">
+                {% for product in search.results %}<!--
+                    -->
+
+
+<!-- Bold Duplicate And Hide -->
+
+{% if item.metafields.inventory.ShappifyHidden == "true" %}
+
+	{% continue %}
+
+{% endif %}
+
+<!-- End Duplicate And Hide -->
+
+                    <li {% if product.available == false %}class="sold-out"{% endif %}>
+                        {% assign collection = product.collections.first %}
+                        {% include 'product-grid-item' %}
+                    </li><!--
+                -->{% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+        <footer>
+            {% include 'pagination' %}
+        </footer>
+    {% endif %}
+
+    {% endpaginate %}
+</div>

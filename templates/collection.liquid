@@ -1,0 +1,142 @@
+<section class="collection">
+    {% assign current_tag = current_tags.first %}
+
+    {% capture header_captured_content %}
+        <div class="captured-header">
+            <div class="inner">
+                <div class="navigation">
+                    {% include 'collection-breadcrumbs' %}
+
+                    {% if settings.collection_show_products_count %}
+                        {% if current_tag %}
+                            {% assign counter = 0 %}
+                            {% for product in collection.products %}
+
+<!-- Bold Duplicate And Hide -->
+
+{% if product.metafields.inventory.ShappifyHidden == "true" %}
+
+	{% continue %}
+
+{% endif %}
+
+<!-- End Duplicate And Hide -->
+
+                                {% if product.tags contains current_tag %}
+                                    {% assign counter = counter | plus: 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <span class="product-count">{{ 'collections.general.products_with_count' | t: count: counter }}</span>
+                        {% else %}
+                            <span class="product-count">{{ 'collections.general.products_with_count' | t: count: collection.all_products_count }}</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="categorization">
+                    <h1 class="title">{{ collection.title }}</h1>
+
+                    {% if collection.all_tags.size > 0 and settings.collection_enable_tag_filters %}
+                        {% comment %}When we have too much tags, it is not convenient to use, so we fallback to a select{% endcomment %}
+
+                        {% if collection.all_tags.size < 5 %}
+                            <ul class="filters unstyled-list">
+                                {% for tag in collection.all_tags %}
+                                    {% if current_tags contains tag %}
+                                        <li class="active">
+                                            {{ tag | link_to_remove_tag: tag }}
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            {{ tag | link_to_tag: tag }}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="styled-select filters">
+                                <select>
+                                    <option value="/collections/{{ collection.handle }}" {% if current_tags.size == 0 %}selected="selected"{% endif %}>{{ 'collections.sorting.no_tag_selected' | t }}</option>
+
+                                    {% for tag in collection.all_tags %}
+                                        <option value="/collections/{{ collection.handle }}/{{ tag }}" {% if current_tags contains tag %}selected="selected"{% endif %}>{{ tag }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="sort">
+                        <label for="sort-by">{{ 'collections.sorting.title' | t }}</label>
+
+                        <div class="styled-select">
+                            <select id="sort-by">
+                                <option value="manual">{{ 'collections.sorting.featured' | t }}</option>
+                                <option value="price-ascending">{{ 'collections.sorting.price_ascending' | t }}</option>
+                                <option value="price-descending">{{ 'collections.sorting.price_descending' | t }}</option>
+                                <option value="title-ascending">{{ 'collections.sorting.az' | t }}</option>
+                                <option value="title-descending">{{ 'collections.sorting.za' | t }}</option>
+                                <option value="created-ascending">{{ 'collections.sorting.date_ascending' | t }}</option>
+                                <option value="created-descending">{{ 'collections.sorting.date_descending' | t }}</option>
+                                <option value="best-selling">{{ 'collections.sorting.best_selling' | t }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endcapture %}
+
+    {% paginate collection.products by settings.collection_items_per_page %}
+
+    <div class="inner">
+        {% if collection.description != blank %}
+            <div class="collection-description rte">{{ collection.description }}</div>
+        {% endif %}
+
+        {% if collection.products_count == 0 %}
+            <p class="empty-collection">{{ 'collections.general.empty' | t }}</p>
+        {% else %}
+            <ul class="product-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-{{ settings.collection_items_per_row }}">
+                {% for product in collection.products %}<!--
+                    {% capture modulo %}{{ forloop.index | modulo:settings.collection_items_per_row }}{% endcapture %}
+                    --><li {% if product.available == false %}class="sold-out {% if modulo == '1' %}first{% endif %}"{% else %}{% if modulo == '1' %}class="first"{% endif %}{% endif %}>
+                        {% assign collection = product.collections.first %}
+                        {% include 'product-grid-item' %}
+                    </li><!--
+                -->{% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+        {% include 'pagination' %}
+    {% endif %}
+
+    {% endpaginate %}
+</section>
+
+<script type="text/javascript">
+    Shopify.queryParams = {};
+
+    if (location.search.length) {
+        for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+            aKeyValue = aCouples[i].split('=');
+
+            if (aKeyValue.length > 1) {
+                Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+            }
+        }
+    }
+
+    $('#sort-by').val(Shopify.queryParams['sort_by'] || '{{ collection.default_sort_by }}' || 'manual')
+            .bind('change', function() {
+                Shopify.queryParams.sort_by = $(this).val();
+                location.search = jQuery.param(Shopify.queryParams);
+            });
+
+    $('.styled-select.filters select').on('change', function(event) {
+       window.location.href = $(event.currentTarget).find(':selected').val();
+    });
+</script>

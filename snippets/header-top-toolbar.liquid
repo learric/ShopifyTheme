@@ -1,0 +1,65 @@
+<section class="header-top">
+    <div class="container">
+        {% if settings.header_enable_top_toolbar %}
+            <span class="marketing-message">Satisfaction Guaranteed - Quick Delivery</span>
+
+            {% capture social_networks %}
+                {% if settings.header_top_toolbar_show_social_networks %}
+                    {% if settings.twitter != blank %}
+                        <a href="{{ settings.twitter }}"><i class="icon-twitter" title="Twitter"></i></a>
+                    {% endif %}
+
+                    {% if settings.facebook != blank %}
+                        <a href="{{ settings.facebook }}"><i class="icon-facebook" title="Facebook"></i></a>
+                    {% endif %}
+
+                    {% if settings.google_plus != blank %}
+                        <a href="{{ settings.google_plus }}"><i class="icon-google-plus" title="Google+"></i></a>
+                    {% endif %}
+
+                    {% if settings.pinterest != blank %}
+                        <a href="{{ settings.pinterest }}"><i class="icon-pinterest" title="Pinterest"></i></a>
+                    {% endif %}
+
+                    {% if settings.instagram != blank %}
+                        <a href="{{ settings.instagram }}"><i class="icon-instagram" title="Instagram"></i></a>
+                    {% endif %}
+
+                    {% if settings.vimeo != blank %}
+                        <a href="{{ settings.vimeo }}"><i class="icon-vimeo" title="Vimeo"></i></a>
+                    {% endif %}
+
+                    {% if settings.tumblr != blank %}
+                        <a href="{{ settings.tumblr }}"><i class="icon-tumblr" title="Tumblr"></i></a>
+                    {% endif %}
+
+                    {% if settings.youtube != blank %}
+                        <a href="{{ settings.youtube }}"><i class="icon-youtube" title="YouTube"></i></a>
+                    {% endif %}
+                {% endif %}
+            {% endcapture %}
+
+            <span class="contact">
+                {% if settings.header_top_toolbar_contact_phone != blank or settings.header_top_toolbar_contact_email != blank %}
+                    {{ 'layout.top_bar.contact' | t }}
+
+                    {% if settings.header_top_toolbar_contact_phone != blank %}
+                        <span class="separator">|</span> <strong>{{ settings.header_top_toolbar_contact_phone }}</strong>
+                    {% endif %}
+
+                    {% if settings.header_top_toolbar_contact_email != blank %}
+                        <span class="separator">|</span> <a href="mailto:{{ settings.header_top_toolbar_contact_email }}">{{ settings.header_top_toolbar_contact_email }}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if social_networks != blank %}
+                    {% if settings.header_top_toolbar_contact_phone != blank or settings.header_top_toolbar_contact_email != blank %}
+                        <span class="separator">|</span>
+                    {% endif %}
+
+                    {{ social_networks }}
+                {% endif %}
+            </span>
+        {% endif %}
+    </div>
+</section>

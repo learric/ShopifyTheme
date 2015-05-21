@@ -1,0 +1,274 @@
+<!-- Bold: Options -->
+
+<script>
+
+function update_qty_builder(builder_id, qty) {
+	jQuery('.'+builder_id+"_qty").val(qty.value);
+}
+
+function remove_product_builder(builder_id) {
+	jQuery('.'+builder_id+"_qty").val(0); jQuery('.'+builder_id+"_qty").parents("form").submit();
+}
+
+</script>
+
+{% include 'bold-cart-handler' %}
+
+<!-- End Bold: Options -->
+
+<div class="cart">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ 'cart.general.title' | t }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ 'cart.general.title' | t }}</h1>
+
+    <div class="inner">
+        {% if cart.item_count == 0 %}
+            <p class="empty-cart">{{ 'cart.general.empty' | t }}</p>
+            <a href="{{ shop.url }}" class="button button-primary">{{ 'cart.general.continue_shopping' | t }}</a>
+        {% else %}
+            <form action="/cart" method="POST">
+                <div class="mobile-summary show-mobile">
+                    <div class="total">
+                        <span>{{ 'cart.label.total' | t }}</span>
+                        <span class="total-price">{{ cart.total_price | money }}</span>
+                    </div>
+
+                    <input type="submit" name="checkout" value="Checkout" class="button button-full button-large button-primary button-submit">
+                </div>
+
+                <div class="hide-mobile">
+                    <table class="cart-items">
+                        <thead>
+                            <tr>
+                                <th>{{ 'cart.label.product' | t }}</th>
+                                <th>{{ 'cart.label.price' | t }}</th>
+                                <th>{{ 'cart.label.quantity' | t }}</th>
+                                <th>{{ 'cart.label.subtotal' | t }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in cart.items %}
+
+<!-- Bold Duplicate And Hide -->
+
+{% include 'boldoptions' with 'step2' %}
+
+<!-- End Duplicate And Hide -->
+
+<!-- Duplicate And Hide Added Class and Style Attr to TR -->
+
+<tr class="{% include 'boldoptions' with 'step3' %} {% comment  %}
+{% endcomment  %}"
+
+style="{% include 'boldoptions' with 'step4' %}
+{% comment  %}
+{% endcomment  %}">
+
+<!-- End Duplicate And Hide TR Class -->
+
+                                    <td class="item-details">
+                                        <a href="{{ item.url }}">
+
+<!-- Bold Duplicate And Hide -->
+
+{% if builder[0] %}
+
+	<img src="{{ builder[1] }}" alt="{{ builder[0] }}" />
+
+	{% else %}
+
+	{% comment %}
+
+		<img src="{{ item | img_url: 'small' }}" alt="{{ item.title | escape }}">
+
+	{% endcomment  %}
+
+{% endif %}
+
+<!-- End Duplicate And Hide -->
+
+                                        </a>
+
+                                        <div class="product-info">
+                                            <p class="item-brand">{{ item.product.vendor }}</p>
+                                            <p class="item-title"><a href="{{ item.url }}">{{ item.product.title }}</a>
+
+<!-- Duplicate And Hide -->
+
+{% include 'boldoptions' with 'step6' %}
+
+<!-- End Duplicate And Hide -->
+
+                                            </p>
+
+                                            {% for variant in item.product.variants %}
+                                                {% if variant.id == item.variant.id %}
+                                                    <p class="item-variant">{{ variant.title }}</p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td class="price-line"><span class="money">
+
+<!-- Duplicate And Hide -->
+
+                                    {% include 'boldoptions' with 'step12' %}
+
+<!-- End Duplicate And Hide -->
+
+                                    </span></td>
+
+<!-- Duplicate And Hide Quantity Input -->
+
+                                    <td>
+                                        <input name="updates[]" type="number" pattern="[0-9]*" maxlength="4" value="{{ item.quantity }}" data-id="updates_{{ item.id }}" class="{% include 'boldoptions' with 'step7' %}" {% include 'boldoptions' with 'step8' %} />
+                                    </td>
+
+<!-- End Duplicate And Hide Quantity Input -->
+
+                                    <td class="price-line total"><span class="money">
+
+<!-- Duplicate And Hide -->
+
+                                    {% include 'boldoptions' with 'step13' %}
+
+<!-- End Duplicate And Hide -->
+
+                                    </span></td>
+                                    <td>
+
+<!-- Duplicate And Hide Remove Button -->
+
+                                        <a href="{% include 'boldoptions' with 'step9' %}" class="{% include 'boldoptions' with 'step10' %}" {% include 'boldoptions' with 'step11' %}>
+                                            <i class="icon-cross"></i>
+                                        </a>
+
+<!-- End Duplicate And Hide Remove Button -->
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if settings.show_multiple_currencies %}
+                    <p class="currency-notice">
+                        {% assign shop_currency = shop.currency %}
+                        {{ 'cart.general.currency_notice' | t: shop_currency: shop_currency }}
+                    </p>
+                    {% endif %}
+
+                    <p class="cart-total">Total<span class="money">{{ cart.total_price | money }}</span></p>
+                </div>
+
+                <div class="show-mobile">
+                    <div class="cart-items-mobile">
+                        {% for item in cart.items %}
+                            <div class="cart-item">
+                                <div class="product-image">
+                                    <a href="{{ item.url }}">
+                                        <img src="{{ item | img_url: 'small' }}" alt="{{ item.title | escape }}">
+                                    </a>
+                                </div>
+
+                                <div class="item-details">
+
+<!-- Duplicate And Hide Remove Button -->
+
+                                        <a href="{% include 'boldoptions' with 'step9' %}" class="{% include 'boldoptions' with 'step10' %}" {% include 'boldoptions' with 'step11' %}>
+                                            <i class="icon-cross"></i>
+                                        </a>
+
+<!-- End Duplicate And Hide Remove Button -->
+
+                                        <i class="icon-cross"></i>
+                                    </a>
+
+                                    <span class="item-part">Item</span>
+                                    <span class="item-title"><a href="{{ item.url }}">{{ item.product.title }}</a></span>
+
+                                    {% for variant in item.product.variants %}
+                                        {% if variant.id == item.variant.id %}
+                                            <span class="item-part">Item Variant</span>
+                                            <span class="item-variant">{{ variant.title }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <span class="item-part">{{ 'cart.label.unit_price' | t }}</span>
+                                    <span class="item-price"><span class="money">{{ item.price | money }}</span></span>
+
+                                    <span class="item-part">{{ 'cart.label.quantity' | t }}</span>
+                                    <input type="text" pattern="[0-9]*" maxlength="4" style="width: 80px" value="{{ item.quantity }}" data-id="{{ item.id }}">
+
+                                    <span class="item-part">{{ 'cart.label.subtotal' | t }}</span>
+                                    <span class="item-price"><span class="money">{{ item.line_price | money }}</span></span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mobile-summary show-mobile">
+                        <div class="total">
+                            <span>{{ 'cart.label.total' | t }}</span>
+                            <span class="total-price money">{{ cart.total_price | money }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if settings.cart_enable_note %}
+                    <div class="cart-instructions">
+                        <p>
+                            <label for="notes">{{ 'cart.general.note' | t }}</label>
+                            <textarea id="notes" rows="4" name="note">{{ cart.note }}</textarea>
+                        </p>
+                    </div>
+                {% endif %}
+
+                <div class="checkout">
+                    <input type="submit" name="checkout" value="Checkout" class="button button-large button-primary button-submit">
+
+                    {% if additional_checkout_buttons %}
+                        <div class="additional-checkout-buttons">
+                            <p>{{ 'cart.general.checkout_with' | t }}</p>
+                            {{ content_for_additional_checkout_buttons }}
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    $('.cart-items input, .cart-items-mobile input').on('change', function() {
+        var elem = $(this);
+
+        var identifier = elem.attr('data-id');
+        var quantity   = elem.val();
+
+        location.href = '/cart/change/' + identifier + '?quantity=' + quantity;
+    });
+
+    $('#notes').on('change', function() {
+        var elem = $(this);
+        return Shopify.updateCartNote(elem.val(), function(cart) {});
+    })
+</script>
+
+{% include 'bold-cart-modal' %}

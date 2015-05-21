@@ -1,0 +1,245 @@
+<div class="home">
+    {% comment %}Show placeholder just when someone install theme in an empty store {% endcomment %}
+    {% if shop.products_count == 0 %}
+        {% include 'welcome-placeholders' %}
+    {% else %}
+        {% if settings.home_show_marketing_module %}
+            <section class="container marketing-module {% if settings.home_marketing_layout == "1" %}layout-1{% elsif settings.home_marketing_layout == "2" %}layout-2{% elsif settings.home_marketing_layout == "3"%}layout-3{% else %}layout-4{% endif %}">
+                <div class="container">
+                    {% if settings.home_marketing_layout == "1" %}
+                        <a href="{{ settings.home_marketing_image_1_link }}"><img src="{{ 'home_marketing_image_1.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_1_alt }}" class="first"></a>
+                        <a href="{{ settings.home_marketing_image_2_link }}"><img src="{{ 'home_marketing_image_2.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_2_alt }}" class="second"></a>
+                        <a href="{{ settings.home_marketing_image_3_link }}"><img src="{{ 'home_marketing_image_3.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_3_alt }}" class="third"></a>
+                        {% elsif settings.home_marketing_layout == "2" %}
+                        <a href="{{ settings.home_marketing_image_1_link }}"><img src="{{ 'home_marketing_image_1.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_1_alt }}" class="first"></a>
+                        <a href="{{ settings.home_marketing_image_2_link }}"><img src="{{ 'home_marketing_image_2.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_2_alt }}" class="second"></a>
+                        {% elsif settings.home_marketing_layout == "3" %}
+                        <a href="{{ settings.home_marketing_image_3_link }}"><img src="{{ 'home_marketing_image_3.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_3_alt }}" class="third"></a>
+                        <a href="{{ settings.home_marketing_image_1_link }}"><img src="{{ 'home_marketing_image_1.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_1_alt }}" class="first"></a>
+                        <a href="{{ settings.home_marketing_image_2_link }}"><img src="{{ 'home_marketing_image_2.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_2_alt }}" class="second"></a>
+                    {% else %}
+                        <a href="{{ settings.home_marketing_image_1_link }}"><img src="{{ 'home_marketing_image_1.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_1_alt }}" class="first"></a>
+                        <a href="{{ settings.home_marketing_image_2_link }}"><img src="{{ 'home_marketing_image_2.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_2_alt }}" class="second"></a>
+                        <a href="{{ settings.home_marketing_image_3_link }}"><img src="{{ 'home_marketing_image_3.jpg' | asset_url }}" alt="{{ settings.home_marketing_image_3_alt }}" class="third"></a>
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% assign positions = settings.home_modules_positions | split: '-' %}
+
+        {% for pos in positions %}
+            {% case pos %}
+
+            {% when 'A' %}
+                {% if settings.newest_products_handle %}
+                    <section class="newest-products">
+                        <div class="container">
+                            {% assign linklist = linklists[settings.newest_products_handle] %}
+
+                            {% if settings.home_show_newest_products_title %}
+                                <h2 class="home-section-title">{{ linklist.title }}</h2>
+                            {% endif %}
+
+                            <div class="inner">
+                                <ul class="product-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-{{ settings.home_newest_products_items_per_row }}">
+                                    {% for link in linklist.links %}<!--
+                                    {% assign product = link.object %}
+                                    {% assign collection = product.collections.first %}
+                                    {% capture modulo %}{{ forloop.index | modulo:settings.collection_items_per_row }}{% endcapture %}
+
+                                    --><li {% if modulo == '1' %}class="first"{% endif %}>{% include 'product-grid-item' %}</li><!--
+                                -->{% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% when 'B' %}
+                {% if settings.featured_collections_handle %}
+                    <section class="featured-collections">
+                        <div class="container">
+                            {% assign linklist = linklists[settings.featured_collections_handle] %}
+
+                            {% if settings.home_show_featured_collections_title %}
+                                <h2 class="home-section-title">{{ linklist.title }}</h2>
+                            {% endif %}
+
+                            <div class="inner">
+                                <ul class="collection-list unstyled-list spacing-{{ settings.home_featured_collections_padding_between_products }} grid-{{ settings.home_featured_collections_items_per_row }}">
+                                    {% for link in linklist.links %}<!--
+                                    {% assign collection = link.object %}
+                                    {% capture modulo %}{{ forloop.index | modulo:settings.collection_items_per_row }}{% endcapture %}
+
+                                    --><li {% if modulo == '1' %}class="first"{% endif %}>
+                                        <a href="{{ collection.url }}">
+                                            <div class="overlay-container">
+                                                <div class="overlay"></div>
+
+                                                {% if collection.image %}
+                                                    {{ collection.image.src | collection_img_url: 'large' | img_tag: collection.image.alt }}
+                                                {% else %}
+                                                    {% assign product = collection.products.first %}
+                                                    {{ product.featured_image.src | product_img_url: 'large' | img_tag: product.featured_image.alt }}
+                                                {% endif %}
+                                            </div>
+
+                                            {% if settings.home_featured_collections_show_name %}
+                                                <div class="title">{{ link.title }}</div>
+                                            {% endif %}
+                                        </a>
+                                    </li><!--
+                                -->{% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% when 'C' %}
+                {% if settings.featured_products_handle %}
+                    <section class="featured-products">
+                        <div class="container">
+                            {% assign linklist = linklists[settings.featured_products_handle] %}
+
+                            {% if settings.home_show_featured_products_title %}
+                                <h2 class="home-section-title">{{ linklist.title }}</h2>
+                            {% endif %}
+
+                            <div class="inner">
+                                <ul class="product-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-{{ settings.home_featured_products_items_per_row }}">
+                                    {% for link in linklist.links %}<!--
+                                        {% assign product = link.object %}
+                                        {% assign collection = product.collections.first %}
+                                        {% capture modulo %}{{ forloop.index | modulo:settings.collection_items_per_row }}{% endcapture %}
+
+                                        --><li {% if modulo == '1' %}class="first"{% endif %}>{% include 'product-grid-item' %}</li><!--
+                                    -->{% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% when 'D' %}
+                <section class="newsletter-module">
+                    <div class="container">
+                        {% if settings.home_show_newsletter_title %}
+                            {% assign shop_name = shop.name %}
+
+                            <h2 class="home-section-title">Want Our Latest Special Deals & Chances To Win Free Apparel? </h2>
+                        {% endif %}
+
+                        <div class="inner">
+                            <p class="subtitle">Then Join Our Newsletter By Entering Your Best Email Below And Be The First To Hear</p>
+
+                            <div class="newsletter-module-form">
+                                <form action="{{ settings.mailchimp_form_action }}" method="post">
+                                    <div class="newsletter-email">
+                                        <input type="email" name="EMAIL" placeholder="{{ 'home_page.newsletter.input_placeholder' | t }}">
+                                        <input type="submit" class="button button-newsletter-module" value="{{ 'home_page.newsletter.submit' | t }}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% when 'E' %}
+                {% if settings.main_blog_handle %}
+                    <section class="latest-posts">
+                        <div class="container">
+                            {% if settings.home_show_blog_title %}
+                                <h2 class="home-section-title">{{ 'home_page.sections.blog_posts' | t }}</h2>
+                            {% endif %}
+
+                            <div class="inner">
+                                <ol class="post-list unstyled-list">
+                                    {% for post in blogs[settings.main_blog_handle].articles limit: 3 %}<!--
+                                    --><li class="post{% if forloop.index == 3 %} last{% endif %}">
+                                        <time datetime="{{ post.published_at | date: "%Y-%m-%dT%T" }}">{{ post.published_at | date: format: "month_day_year" }}</time>
+                                        <a href="{{ post.url }}" class="post-title">{{ post.title }}</a>
+
+                                        <div class="excerpt rte">
+                                            {{ post.excerpt_or_content | truncatewords: 20 }}
+                                        </div>
+
+                                        {% if settings.home_blog_read_more_enable %}
+                                            <a href="{{ post.url }}" class="button button-small button-secondary">{{ 'blogs.article.read_more' | t }}</a>
+                                        {% endif %}
+                                    </li><!--
+                                -->{% endfor %}
+                                </ol>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% when 'F' %}
+                <section class="free-text-module">
+                    <div class="container">
+                        <div class="inner">
+                            {% if settings.home_show_free_text_title %}
+                                <h2 class="home-section-title">{{ settings.home_free_text_title }}</h2>
+                            {% endif %}
+
+                            {% if settings.home_free_text_content != blank %}
+                                <p class="content">{{ settings.home_free_text_content }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+            {% when 'G' %}
+                {% if settings.home_instagram_access_token != blank %}
+                    <section class="instagram-feed">
+                        <div {% unless settings.home_show_instagram_full_width %}class="container"{% endunless %}>
+                            {% if settings.home_show_instagram_title %}
+                                <h2 class="home-section-title {% if settings.home_show_instagram_full_width %}container{% endif %}">
+                                    {% if settings.home_show_instagram_icon %}<i class="icon-instagram"></i>{% endif %}{{ 'home_page.sections.instagram_feed' | t }}
+
+                                    {% if pages.instagram-feed.title != '' %}
+                                        <a href="{{ pages.instagram-feed.url }}" class="see-all">{{ 'home_page.general.see_all' | t }}</a>
+                                    {% endif %}
+                                </h2>
+                            {% endif %}
+
+                            <div class="inner">
+                                <div id="instafeed" class="spacing-{{ settings.home_instagram_padding_between_images }} grid-{{ settings.home_instagram_images_per_rows }}"></div>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            {% endcase %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% if settings.home_instagram_access_token != blank %}
+<script type="text/javascript">
+    {% if settings.home_instagram_open_window_mode == '1' %}
+        {% assign template = '<div class="picture-wrapper"><a href="{{link}}"><div class="overlay"></div><img src="{{image}}"/></a></div>' %}
+    {% else %}
+        {% assign template = '<div class="picture-wrapper"><a href="{{link}}" target="_blank"><div class="overlay"></div><img src="{{image}}"/></a></div>' %}
+    {% endif %}
+
+    {% if settings.home_instagram_fetch_mode == '1' %}
+    var feed = new Instafeed({
+        get: 'user',
+        userId: {{ settings.home_instagram_user_id }},
+        accessToken: '{{ settings.home_instagram_access_token }}',
+        sortBy: 'most-recent',
+        limit: {{ settings.home_instagram_images_per_rows }} * {{ settings.home_instagram_count_rows }},
+        resolution: 'low_resolution',
+        template: '{{ template }}'
+    });
+    {% else %}
+    var feed = new Instafeed({
+        get: 'tagged',
+        tagName: '{{ settings.home_instagram_tag }}',
+        accessToken: '{{ settings.home_instagram_access_token }}',
+        sortBy: 'most-recent',
+        limit: {{ settings.home_instagram_images_per_rows }} * {{ settings.home_instagram_count_rows }},
+        resolution: 'low_resolution',
+        template: '{{ template }}'
+    });
+    {% endif %}
+
+    feed.run();
+</script>
+{% endif %}

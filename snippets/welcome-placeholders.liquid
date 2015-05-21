@@ -1,0 +1,142 @@
+<div style="text-align: center; margin: 45px 0 20px 0;">
+    <p>{{ 'home_page.onboarding.thank_you' | t }}</p>
+    <p>{{ 'home_page.onboarding.no_products' | t }}</p>
+</div>
+
+<br/>
+
+<section class="newest-products">
+    <div class="container">
+        <h2 class="home-section-title">{{ 'home_page.onboarding.featured_products' | t }}</h2>
+
+        <div class="inner">
+            <ul class="product-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-3"><!--
+                --><li class="first">
+                    <div>
+                        <a href="#" title="Sample">
+                            <figure>
+                                <div class="overlay-container">
+                                    <div class="overlay"></div>
+                                    <img src="//placehold.it/280x280" alt="Sample">
+                                </div>
+                            </figure>
+                        </a>
+
+                        <section class="info">
+                            <a href="#" class="brand">{{ 'home_page.onboarding.brand_1' | t }}</a>
+                            <a href="#" class="product-title">{{ 'home_page.onboarding.product_1' | t }}</a>
+                            <span class="price money">€395.00</span>
+                        </section>
+                    </div>
+                </li><!--
+                --><li>
+                    <div>
+                        <a href="#" title="Sample">
+                            <figure>
+                                <div class="overlay-container">
+                                    <div class="overlay"></div>
+                                    <img src="//placehold.it/280x280" alt="Sample">
+                                </div>
+                            </figure>
+                        </a>
+
+                        <section class="info">
+                            <a href="#" class="brand">{{ 'home_page.onboarding.brand_2' | t }}</a>
+                            <a href="#" class="product-title">{{ 'home_page.onboarding.product_2' | t }}</a>
+                            <span class="price money">€295.00</span>
+                        </section>
+                    </div>
+                </li><!--
+                --><li>
+                    <div>
+                        <a href="#" title="Sample">
+                            <figure>
+                                <div class="overlay-container">
+                                    <div class="overlay"></div>
+                                    <img src="//placehold.it/280x280" alt="Sample">
+                                </div>
+                            </figure>
+                        </a>
+
+                        <section class="info">
+                            <a href="#" class="brand">{{ 'home_page.onboarding.brand_3' | t }}</a>
+                            <a href="#" class="product-title">{{ 'home_page.onboarding.product_3' | t }}</a>
+                            <span class="price money">€395.00</span>
+                        </section>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="featured-collections">
+    <div class="container">
+        <h2 class="home-section-title">{{ 'home_page.onboarding.featured_collections' | t }}</h2>
+
+        <div class="inner">
+            <ul class="collection-list unstyled-list spacing-{{ settings.home_featured_collections_padding_between_products }} grid-2"><!--
+                --><li>
+                    <a href="#">
+                        <figure>
+                            <img src="//placehold.it/470x290" alt="Sample">
+                        </figure>
+                    </a>
+                </li><!--
+
+                --><li>
+                    <a href="#">
+                        <figure>
+                            <img src="//placehold.it/470x290" alt="Sample">
+                        </figure>
+                    </a>
+                </li><!--
+
+                --><li>
+                    <a href="#">
+                        <figure>
+                            <img src="//placehold.it/470x290" alt="Sample">
+                        </figure>
+                    </a>
+                </li><!--
+
+                --><li>
+                    <a href="#">
+                        <figure>
+                            <img src="//placehold.it/470x290" alt="Sample">
+                        </figure>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+{% if settings.main_blog_handle %}
+    <section class="latest-posts">
+        <div class="container">
+            {% if settings.home_show_blog_title %}
+                <h2 class="home-section-title">{{ 'home_page.sections.blog_posts' | t }}</h2>
+            {% endif %}
+
+            <div class="inner">
+                <ol class="post-list unstyled-list">
+                    {% for post in blogs[settings.main_blog_handle].articles limit: 3 %}<!--
+                                    --><li class="post{% if forloop.index == 3 %} last{% endif %}">
+                        <time datetime="{{ post.published_at | date: "%Y-%m-%dT%T" }}">{{ post.published_at | date: format: "month_day_year" }}</time>
+                        <a href="{{ post.url }}" class="post-title">{{ post.title }}</a>
+
+                        <div class="excerpt rte">
+                            {{ post.excerpt_or_content | truncatewords: 20 }}
+                        </div>
+
+                        {% if settings.home_blog_read_more_enable %}
+                            <a href="{{ post.url }}" class="button button-small button-secondary">{{ 'blogs.article.read_more' | t }}</a>
+                        {% endif %}
+                    </li><!--
+                                -->{% endfor %}
+                </ol>
+            </div>
+        </div>
+    </section>
+{% endif %}

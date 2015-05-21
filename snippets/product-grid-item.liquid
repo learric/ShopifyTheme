@@ -1,0 +1,54 @@
+{% unless product_image_size %}
+    {% assign product_image_size = 'large' %}
+{% endunless %}
+
+<div {% if product.available == false %} class="sold-out" {% endif %}>
+    <a href="{{ product.url | within: collection }}" title="{{ product.title | escape }}">
+        <figure>
+            <div class="overlay-container">
+                <div class="overlay"></div>
+
+                {% if product.compare_at_price_max > product.price %}
+                    <span class="on-sale">{{ 'products.product.on_sale' | t }}</span>
+                {% endif %}
+
+                <img src="{{ product.featured_image.src | product_img_url: product_image_size }}" alt="{{ product.featured_image.alt | escape }}">
+            </div>
+        </figure>
+    </a>
+
+    <section class="info">
+        {% assign variant = product.selected_or_first_available_variant %}
+
+        {% if variant.compare_at_price > product.price and settings.collection_show_sale_percentage %}
+            <span class="sale-percent">-{{ variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | round }}%</span>
+        {% endif %}
+
+        {% if product.available == false %}
+            <span class="sold-out-label">{{ 'products.product.sold_out' | t }}</span>
+        {% endif %}
+
+        {% if settings.collection_show_brand %}
+            <a href="/collections/vendors?q={{ product.vendor }}" class="brand">{{ product.vendor }}</a>
+        {% endif %}
+
+        <a href="{{ product.url | within: collection }}" class="product-title">{{ product.title }}</a>
+
+        {% unless product.tags contains 'hide-price-in-list' %}
+            {% if variant.compare_at_price > variant.price %}
+                <span class="old-price money">{{ variant.compare_at_price | money }}</span>
+                <span class="new-price money">{{ variant.price | money }}</span>
+            {% else %}
+                <span class="price money">
+                {% if product.available == false %}
+                    {{ 'products.product.sold_out' | t }}
+                {% elsif product.price_varies %}
+                    between {{ product.price_min | money }} to {{ product.price_max | money }}
+                {% else %}
+                    {{ product.price_min | money }}
+                {% endif %}
+                </span>
+            {% endif %}
+        {% endunless %}
+    </section>
+</div>

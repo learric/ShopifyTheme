@@ -1,0 +1,25 @@
+<div class="error-404">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    404
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">404 - {{ 'general.404.not_found' | t }}</h1>
+
+    <div class="inner">
+        <span class="s404">404</span>
+
+        {{ 'general.404.subtext_html' | t }}
+    </div>
+</div>

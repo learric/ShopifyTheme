@@ -1,0 +1,56 @@
+<aside class="blog-sidebar">
+    {% if settings.blog_display_about %}
+        <section class="about">
+            <h3 class="section-title">{{ 'blogs.sidebar.about' | t }}</h3>
+
+            <div class="rte">
+                <p>{{ settings.blog_about_text }}</p>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if settings.blog_display_recent_posts %}
+        <section class="latest-posts">
+            <h3 class="section-title">{{ 'blogs.sidebar.recent_posts' | t }}</h3>
+
+            <ol class="unstyled-list">
+                {% for post in blogs[settings.main_blog_handle].articles limit: 3 %}
+                    <li>
+                        <a href="{{ post.url }}">{{ post.title }}</a>
+                        <time datetime="{{ post.published_at | date: "%Y-%m-%dT%T" }}">{{ post.published_at | date: format: "month_day_year" }}</time>
+                    </li>
+                {% endfor %}
+            </ol>
+        </section>
+    {% endif %}
+
+    {% if settings.blog_display_tags %}
+        <section class="tags">
+            <h3 class="section-title">{{ 'blogs.sidebar.tags' | t }}</h3>
+
+            <ul class="unstyled-list">
+                {% for tag in blog.tags %}
+                    {% assign count = 0 %}
+                    {% for article in blogs[blog.handle].articles %}
+                        {% if article.tags contains tag %}
+                            {% capture count %}{{ count | plus: 1 }}{% endcapture %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <li>
+                        {{ tag | link_to_tag: tag }}
+                        <span class="tag-count">({{ count }})</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    {% if settings.blog_display_rss_feed %}
+        <section class="rss-feed">
+            <p class="rss-feed">
+                <a href="{{ blog.url }}.atom"><i class="icon-rss" title="RSS Feed"></i>{{ 'blogs.sidebar.rss_feed' | t }}</a>
+            </p>
+        </section>
+    {% endif %}
+</aside>

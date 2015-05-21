@@ -1,0 +1,58 @@
+<div class="account">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ 'customer.register.title' | t }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ 'customer.register.title' | t }}</h1>
+
+    <div class="inner">
+        <section class="register">
+            {% form 'create_customer' %}
+
+            {% if form.errors %}
+                <div class="alert-box alert-error">
+                    <span class="alert-title">{{ 'general.forms.oops' | t }}</span>
+                    <p>{{ form.errors | default_errors | strip_html }}</p>
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-control">
+                    <label for="customer[first_name]">{{ 'customer.register.first_name' | t }}</label>
+                    <input type="text" name="customer[first_name]" value="{{ form.first_name | escape }}">
+                </div>
+
+                <div class="form-control">
+                    <label for="customer[last_name]">{{ 'customer.register.last_name' | t }}</label>
+                    <input type="text" name="customer[last_name]" value="{{ form.last_name | escape }}">
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label for="customer[email]">{{ 'customer.register.email' | t }}</label>
+                <input type="email" name="customer[email]" value="{{ form.email | escape }}" {% if form.errors.messages.email %}class="error"{% endif %}>
+            </div>
+
+            <div class="form-control">
+                <label for="customer[password]">{{ 'customer.register.password' | t }}</label>
+                <input type="password" name="customer[password]" {% if form.errors.messages.password %}class="error"{% endif %}>
+            </div>
+
+            <button type="submit" class="button button-primary button-submit">{{ 'customer.register.submit' | t }}</button>
+
+            {% endform %}
+        </section>
+    </div>
+</div>

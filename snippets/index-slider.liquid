@@ -1,0 +1,49 @@
+<div class="home-slider bx-slider">
+    {% for i in (1..5) %}
+        {% assign is_active = 'slideshow_slide_' | append: i | append:'_checkbox' %}
+
+        {% if settings[is_active] %}
+            {% assign type = 'slideshow_slide_' | append: i | append:'_type' %}
+            {% assign picture = 'slideshow_slide_' | append: i | append:'_picture.jpg' %}
+            {% assign video = 'slideshow_slide_' | append: i | append:'_video' %}
+            {% assign text_position = 'slideshow_slide_' | append: i | append:'_text_position' %}
+            {% assign subtitle = 'slideshow_slide_' | append: i | append:'_subtitle' %}
+            {% assign title = 'slideshow_slide_' | append: i | append:'_title' %}
+            {% assign button = 'slideshow_slide_' | append: i | append:'_button' %}
+            {% assign link = 'slideshow_slide_' | append: i | append:'_link' %}
+
+            <div class="slide active cover">
+                {% comment %}
+                    {% if settings[type] == 'image' %}
+                        <div class="cover-image" style="background: url({{ picture | asset_url }}) top center no-repeat">
+                        </div>
+                    {% else %}
+                        <div class="cover-video">
+                            <div class="fluid-width-video-wrapper">
+                                <iframe src="{{ settings[video] }}" width="500" height="200" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endcomment %}
+
+                <div class="cover-image" style="background: url({{ picture | asset_url }}) top center no-repeat"></div>
+
+                <div class="cover-text">
+                    <div class="container" style="text-align: {{ settings[text_position] }}">
+                        {% if settings[subtitle] != '' %}
+                            <h3>{{ settings[subtitle] }}</h3>
+                        {% endif %}
+
+                        {% if settings[title] != '' %}
+                            <h2>{{ settings[title] }}</h2>
+                        {% endif %}
+
+                        {% if settings[button] != '' %}
+                            <a class="button button-slider" href="{{ settings[link] }}">{{ settings[button] }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>

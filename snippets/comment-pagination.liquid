@@ -1,0 +1,9 @@
+<div class="pagination">
+    {% for part in paginate.parts %}
+        {% if part.is_link %}
+            <a href="{{ part.url }}#post-comments">{{ part.title }}</a>
+        {% else %}
+            <span class="active">{{ part.title }}</span>
+        {% endif %}
+    {% endfor %}
+</div>

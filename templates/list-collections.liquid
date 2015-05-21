@@ -1,0 +1,39 @@
+<div class="collections">
+    {% capture header_captured_content %}
+    <div class="captured-header">
+        <div class="inner">
+            <div class="navigation">
+                {% unless settings.disable_breadcrumbs %}
+                    <nav class="breadcrumb">
+                        <ol>
+                            <li itemscope itemtype="//data-vocabulary.org/Breadcrumb">
+                                <a href="/" itemprop="url"><span itemprop="title">{{ 'general.breadcrumbs.home' | t }}</span></a>
+                            </li>
+
+                            <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/" class="active">
+                                <meta itemscope="url" content="/collections">
+                                <span itemprop="title">{{ 'general.breadcrumbs.collections' | t }}</span>
+                            </li>
+                        </ol>
+                    </nav>
+                {% endunless %}
+            </div>
+
+            <div class="categorization">
+                <h1 class="title">{{ 'collections.general.all_title' | t }}</h1>
+            </div>
+        </div>
+    </div>
+    {% endcapture %}
+
+    <div class="inner">
+        <ul class="collection-list unstyled-list spacing-{{ settings.collection_horizontal_padding_between_products }} grid-{{ settings.collection_items_per_row }}">
+            {% for collection in collections %}<!--
+                {% capture modulo %}{{ forloop.index | modulo:settings.collection_items_per_row }}{% endcapture %}
+                --><li {% if modulo == '1' %}class="first"{% endif %}>
+                    {% include 'collection-grid-item' %}
+                </li><!--
+            -->{% endfor %}
+        </ul>
+    </div>
+</div>

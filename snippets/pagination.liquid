@@ -1,0 +1,9 @@
+<div class="pagination">
+    {% for part in paginate.parts %}
+        {% if part.is_link %}
+            {{ part.title | link_to: part.url }}
+        {% else %}
+            <span class="active">{{ part.title }}</span>
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,227 @@
+<div class="desktop-header">
+    {% if settings.header_enable_top_toolbar %}
+        {% include 'header-top-toolbar' %}
+    {% endif %}
+
+    <header role="banner" class="{% if template == 'index' and settings.enable_slideshow %}has-slider{% endif %}">
+        <div class="container">
+            <div class="inner">
+                <ul class="header-toolbar unstyled-list">
+                    {% if settings.show_multiple_currencies %}
+                        <li>{% include 'currencies-switcher' %}</li>
+                    {% endif %}
+
+                    {% if shop.customer_accounts_enabled %}
+                        {% if customer %}
+                            <li><a href="/account">{{ 'layout.customer.account' | t }}</a></li>
+                            <li>{{ 'layout.customer.logout' | t | customer_logout_link }}</li>
+                        {% else %}
+                            <li><a href="/account/login">{{ 'layout.customer.login' | t }}</a></li>
+                        {% endif %}
+                    {% endif %}
+
+                    <li><a href="/cart">{{ 'layout.cart.title' | t }} ({{ cart.item_count }})</a></li>
+                </ul>
+
+                <h1 class="logo">
+                    {% if settings.use_logo %}
+                        <a href="/">
+                            <img class="logo-regular" src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}">
+                            <img class="logo-retina" src="{{ 'logo_retina.png' | asset_url }}" alt="{{ shop.name }}" onerror="retinaDoesNotExist()">
+                        </a>
+                    {% else %}
+                        <a href="/">{{ shop.name }}</a>
+                    {% endif %}
+                </h1>
+
+                <nav id="blabla" class="header-nav nav" role="navigation">
+                    <div class="search-form-container">
+                        <form action="/search" method="get" class="search-form" role="search">
+                            <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms | escape }}">
+                        </form>
+
+                        <a href="#" class="toggle-search-form"><i class="icon-cross" title="Close"></i></a>
+                    </div>
+
+                    <ul class="links">
+                        {% for link in linklists.main-menu.links %}
+                            {% assign handle = link.handle %}
+                            {% if linklists[handle] and linklists[handle].links.size > 0 %}
+                                <li {% if link.active %}class="active dropdown"{% else %}class="dropdown"{% endif %}>
+                                    {{ link.title | link_to: link.url }}
+                                    <ul>
+                                        {% for subLink in linklists[handle].links %}
+                                            <li>{{ subLink.title | link_to: subLink.url }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li {% if link.active %}class="active"{% endif %}>
+                                    {{ link.title | link_to: link.url }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li>
+                            <a href="#" class="toggle-search-form"><i class="icon-search" title="Search"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Some pages may add "content" into the header part, like collection -->
+                {% if header_captured_content != blank %}
+                    {{ header_captured_content }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if template == 'index' and settings.enable_slideshow %}
+            {% include 'index-slider' %}
+        {% endif %}
+    </header>
+</div>
+
+<div class="mobile-header">
+    <header role="banner">
+        <h1 class="logo">
+            {% if settings.use_logo %}
+                <a href="/">
+                    <img class="logo-regular" src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}">
+                    <img class="logo-retina" src="{{ 'logo_retina.png' | asset_url }}" alt="{{ shop.name }}" onerror="retinaDoesNotExist()">
+                </a>
+            {% else %}
+                <a href="/">{{ shop.name }}</a>
+            {% endif %}
+        </h1>
+
+        <nav class="header-nav nav" role="navigation">
+            <ul class="tabs">
+                <li class="mobile-menu">
+                    <a href="#" class="tab-icon"><i class="icon-menu"></i></a>
+
+                    <div class="tab-content">
+                        <ul class="links">
+                            {% for link in linklists.main-menu.links %}
+                                {% assign handle = link.handle %}
+                                {% if linklists[handle] and linklists[handle].links.size > 0 %}
+                                    <li {% if link.active %}class="active dropdown"{% else %}class="dropdown"{% endif %}>
+                                        {{ link.title | link_to: link.url }}
+                                        <a href="#" class="see-more"><i class="icon-plus"></i></a>
+
+                                        <ul>
+                                            {% for subLink in linklists[handle].links %}
+                                                <li>{{ subLink.title | link_to: subLink.url }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li {% if link.active %}class="active"{% endif %}>
+                                        {{ link.title | link_to: link.url }}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+
+                {% if shop.customer_accounts_enabled %}
+                    <li class="mobile-customer-links">
+                        <a href="#" class="tab-icon"><i class="icon-user"></i></a>
+
+                        <div class="tab-content">
+                            {% if customer %}
+                                <a href="/account" class="button button-secondary">{{ 'layout.customer.account' | t }}</a>
+                                <a href="/account/logout" class="button button-primary">{{ 'layout.customer.logout' | t }}</a>
+                            {% else %}
+                                <a href="/account/login" class="button button-secondary">{{ 'layout.customer.login' | t }}</a>
+                                <a href="/account/register" class="button button-primary">{{ 'layout.customer.sign_up' | t }}</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endif %}
+
+                <li {% if template == 'cart' %}class="active"{% endif %}>
+                    <a href="/cart" class="tab-icon">
+                        <i class="icon-cart"></i>
+                        {% if cart.item_count > 0 %}<span class="cart-count">{{ cart.item_count }}</span>{% endif %}
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" class="tab-icon search-link"><i class="icon-search"></i></a>
+
+                    <div class="tab-content">
+                        <form action="/search" method="get" class="search-form" role="search">
+                            <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms | escape }}">
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    {% if template == 'index' and settings.enable_slideshow %}
+        {% include 'index-slider' %}
+    {% endif %}
+</div>
+
+<script>
+    $(window).on('load', function() {
+        var headerNav = $('.header-nav'),
+            links = headerNav.find('.links');
+
+        headerNav.find('.search-form-container').css('width', links.width())
+                                                .css('left', links.position().left)
+                                                .css('top', 0);
+    });
+
+    $('.toggle-search-form').on('click', function() {
+        $(this).closest('.header-nav').toggleClass('show-search-form')
+               .find('.search-form input').focus();
+    });
+
+    $('.mobile-header .search-link').on('click', function() {
+        $(this).next('.tab-content').find('input').focus();
+    });
+
+    $('.mobile-header .tabs > li a').on('click', function() {
+        $(this).parent().siblings().removeClass('active').end().toggleClass('active');
+    });
+
+    $('.mobile-header .see-more').on('click', function() {
+        var elem = $(this),
+            text = elem.html();
+
+        elem.html(text === '<i class="icon-plus"></i>' ? '<i class="icon-minus"></i>' : '<i class="icon-plus"></i>');
+
+        elem.closest('.dropdown').toggleClass('open');
+
+        return false;
+    });
+</script>
+
+{% if settings.enable_slideshow %}
+    <script>
+        var homeSlider = $('.home-slider').bxSlider({
+                mode: '{{ settings.slideshow_transition_effect }}',
+                video: true,
+                adaptiveHeight: false,
+                pager: false,
+                auto: {% if settings.slideshow_auto_rotate %}true{% else %}false{% endif %},
+                pause: {{ settings.slideshow_delay }} * 1000,
+                slideMargin: 0,
+                controls: true,
+                {% if settings.slideshow_transition_effect == 'vertical' %}
+                nextText: '<i class="icon-arrow-bottom"></i>',
+                prevText: '<i class="icon-arrow-top"></i>',
+                wrapperClass: 'bx-wrapper vertical',
+                {% else %}
+                nextText: '<i class="icon-arrow-right"></i>',
+                prevText: '<i class="icon-arrow-left"></i>',
+                {% endif %}
+                onSliderLoad: function() {
+            $('.bx-controls').addClass('container');
+        }
+        });
+    </script>
+{% endif %}

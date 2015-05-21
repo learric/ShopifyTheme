@@ -1,0 +1,64 @@
+<div class="about-us">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ page.title }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <div class="inner">
+        <section class="our-company rte">
+            {{ page.content }}
+        </section>
+
+        <section class="contact">
+            {% form 'contact' %}
+            {% if form.posted_successfully? %}
+                <div class="alert-box alert-success">
+                    <span class="alert-title">{{ 'contact.form.thank_you' | t }}</span>
+                    <p>{{ 'contact.form.success' | t }}</p>
+                </div>
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert-box alert-error">
+                    <span class="alert-title">{{ 'general.forms.oops' | t }}</span>
+                    <p>{{ form.errors | default_errors | strip_html }}</p>
+                </div>
+            {% endif %}
+
+            <div class="form-control">
+                <label for="contact[name]">{{ 'contact.form.name' | t }}</label>
+                <input type="text" name="contact[name]" placeholder="{{ 'contact.form.placeholder_name' | t }}" value="{{ form.name | escape }}" {% if form.errors.messages.name %}class="error"{% endif %}>
+            </div>
+
+            <div class="form-control">
+                <label for="contact[email]">{{ 'contact.form.email' | t }}</label>
+                <input type="email" name="contact[email]" placeholder="{{ 'contact.form.placeholder_email' | t }}" value="{{ form.email | escape }}" {% if form.errors.messages.email %}class="error"{% endif %}>
+            </div>
+
+            <div class="form-control">
+                <label for="contact[body]">{{ 'contact.form.message' | t }}</label>
+                <textarea rows="5" cols="75" name="contact[body]" placeholder="{{ 'contact.form.placeholder_message' | t }}" {% if form.errors.messages.body %}class="error"{% endif %}>{{ form.body }}</textarea>
+            </div>
+
+            <button type="submit" class="button button-primary button-submit" id="contactFormSubmit">{{ 'contact.form.submit' | t }}</button>
+
+            {% endform %}
+        </section>
+    </div>
+</div>
+
+

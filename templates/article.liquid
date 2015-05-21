@@ -1,0 +1,117 @@
+<div class="blog" itemscope itemtype="//schema.org/Blog">
+    <h1 class="page-title">{{ blog.title }}</h1>
+
+    <div class="inner">
+        <div class="post-details" itemprop="blogPost" itemscope itemtype="//schema.org/BlogPosting">
+            {% assign post = article %}
+
+            <article class="post">
+                {% include "post-header" %}
+
+                <section class="post-body rte" itemprop="articleBody">
+                    {{ post.content }}
+                </section>
+            </article>
+
+            {% if settings.blog_enable_share_buttons %}
+                <aside class="share-post">
+                    <p>{{ 'blogs.article.share' | t }}</p>
+
+                    {% include 'sharing-buttons' %}
+                </aside>
+            {% endif %}
+
+            <div class="post-navigation">
+                {% if blog.next_article %}
+                    <a href="{{ blog.next_article }}" class="button button-secondary left" rel="prev">{{ 'blogs.article.next' | t }}</a>
+                {% endif %}
+
+                {% if blog.previous_article %}
+                    <a href="{{ blog.previous_article }}" class="button button-secondary right" rel="next">{{ 'blogs.article.previous' | t }}</a>
+                {% endif %}
+            </div>
+
+            {% if blog.comments_enabled? %}
+                <section class="post-comments" id="post-comments">
+                    {% form article %}
+
+                    {% if form.posted_successfully? %}
+                        <p class="alert-box alert-success">
+                            <span class="alert-title">{{ 'blogs.comments.success' | t }}</span>
+
+                            {% if blog.moderated? %}
+                                {{ 'blogs.comments.success_moderated' | t }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+
+                    {% if form.errors %}
+                        <div class="alert-box alert-error">
+                            <span class="alert-title">{{ 'general.forms.oops' | t }}</span>
+                            <p>{{ form.errors | default_errors | strip_html }}</p>
+                        </div>
+                    {% endif %}
+
+                    <span class="comments-count">{{ 'blogs.comments.comments_with_count' | t: count: post.comments_count }}</span>
+
+                    {% paginate article.comments by settings.blog_comments_per_page %}
+                        {% for comment in article.comments %}
+                            <article class="comment" itemprop="comment" itemscope itemtype="//schema.org/UserComments">
+                                <img src="//www.gravatar.com/avatar/{{ comment.email | remove: ' ' | strip_newlines | downcase | md5 }}" class="comment-gravatar">
+
+                                <div class="comment-content">
+                                    <p class="comment-meta">
+                                        {% capture author %}<b>{{ comment.author }}</b>{% endcapture %}
+                                        {% capture date %}<time datetime="{{ comment.created_at | date: "%Y-%m-%dT%T" }}" itemprop="commentTime">{{ comment.created_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+
+                                        {{ 'blogs.comments.comment_on_date_html' | t: author: author, date: date }}
+                                    </p>
+
+                                    <div class="rte" itemprop="commentText">
+                                        {{ comment.content }}
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+
+                        {% if paginate.pages > 1 %}
+                            {% include 'comment-pagination' %}
+                        {% endif %}
+                    {% endpaginate %}
+
+                    <div class="new-comment-form">
+                        <p class="title">{{ 'blogs.comments.leave_comment' | t }}</p>
+
+                        <div class="form-control-row">
+                            <div class="form-control">
+                                <label for="comment-author">{{ 'blogs.comments.name' | t }}</label>
+                                <input type="text" id="comment-author" name="comment[author]" value="{{ form.name | escape }}" {% if form.errors.messages.name %}class="error"{% endif %}>
+                            </div>
+
+                            <div class="form-control">
+                                <label for="comment-email">{{ 'blogs.comments.email' | t }}</label>
+                                <input type="email" id="comment-email" name="comment[email]" value="{{ form.name | escape }}" {% if form.errors.messages.name %}class="error"{% endif %}>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label for="comment-body">{{ 'blogs.comments.comment' | t }}</label>
+                            <textarea id="comment-body" rows="5" cols="75" name="comment[body]" {% if form.errors.messages.body %}class="error"{% endif %}>{{ form.body }}</textarea>
+                        </div>
+
+                        {% if blog.moderated? %}
+                            <p class="needs-approval">{{ 'blogs.comments.needs_approval' | t }}</p>
+                        {% endif %}
+
+                        <div class="form-control">
+                            <button type="submit" class="button button-primary button-submit" id="newCommentFormSubmit">{{ 'blogs.comments.submit' | t }}</button>
+                        </div>
+                    </div>
+                    {% endform %}
+                </section>
+            {% endif %}
+        </div>
+
+        {% include "blog-sidebar" %}
+    </div>
+</div>

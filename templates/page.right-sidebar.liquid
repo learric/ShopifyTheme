@@ -1,0 +1,29 @@
+<div class="custom-page">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ page.title }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <div class="inner">
+        <section class="rte">
+            {{ page.content }}
+        </section>
+
+        <aside class="right-sidebar">
+            {% include 'sidebar-widget' %}
+        </aside>
+    </div>
+</div>

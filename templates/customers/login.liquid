@@ -1,0 +1,102 @@
+<div class="account">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ 'customer.login.title' | t }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ 'customer.login.title' | t }}</h1>
+
+    <div class="inner">
+        <section class="recover-password" style='display: none'>
+            {% form 'recover_customer_password' %}
+
+            {% if form.errors %}
+                <p class="alert-box alert-error">
+                    <span class="alert-title">{{ 'customer.password.no_account_found' | t }}</span>
+                    {{ form.errors | default_errors | strip_html }}
+                </p>
+                {% elsif form.posted_successfully? %}
+                <p class="alert-box alert-success">
+                    <span class="alert-title">{{ 'customer.login.sent_password' | t }}</span>
+                </p>
+            {% endif %}
+
+            <div class="form-control">
+                <label for="email">{{ 'customer.recover_password.email' | t }} :</label>
+                <input type="email" name="email" value="">
+            </div>
+
+            <button type="submit" class="button button-primary button-submit">{{ 'customer.recover_password.submit' | t }}</button>
+
+            <div class="new-customer">
+                <p>{{ 'customer.recover_password.already_have_account' | t }} <a href="/account/login" class="highlight login-link"><b>{{ 'customer.recover_password.login' | t }}</b></a></p>
+            </div>
+
+            {% endform %}
+        </section>
+
+        <section class="login">
+            {% form 'customer_login' %}
+
+            {% if form.errors %}
+                <div class="alert-box alert-error">
+                    <span class="alert-title">{{ 'general.forms.oops' | t }}</span>
+                    <p>{{ form.errors | default_errors | strip_html }}</p>
+                </div>
+            {% endif %}
+
+            <div class="form-control">
+                <label for="customer[email]">{{ 'customer.login.email' | t }}</label>
+                <input type="email" name="customer[email]" value="" tabindex="1">
+            </div>
+
+            <div class="form-control">
+                <label for="customer[password]">{{ 'customer.login.password' | t }} <a href="#" class="forgot-password-link"><em>({{ 'customer.login.forgot_password' | t }})</em></a></label>
+                <input type="password" name="customer[password]" tabindex="2">
+            </div>
+
+            <button type="submit" class="button button-primary button-submit">{{ 'customer.login.sign_in' | t }}</button>
+
+            {% endform %}
+
+            <div class="new-customer">
+                {% if shop.checkout.guest_login %}
+                    {% form 'guest_login' %}
+                        <input class="no-style" type="submit" value="{{ 'customer.login.guest_title' | t }}">
+                    {% endform %}
+                {% else %}
+                    <p>{{ 'customer.login.new' | t }} <a href="/account/register" class="highlight"><b>{{ 'customer.login.sign_up' | t }}</b></a></p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var switchToReset = function() {
+            $('.login, .recover-password').toggle();
+            $('.page-title').html('{{ 'customer.recover_password.title' | t }}');
+        };
+
+        // When we submit a reset password, Shopify redirects to the login page, but with the "#recover" hash
+        if (window.location.hash === '#recover') {
+            switchToReset();
+        }
+
+        $('.forgot-password-link').on('click', function() {
+            switchToReset();
+        });
+    });
+</script>

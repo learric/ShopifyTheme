@@ -1,0 +1,24 @@
+{% assign variant = product.selected_or_first_available_variant %}
+
+<div class="offers" itemprop="offers" itemscope itemtype="//schema.org/Offer">
+    <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
+    <meta itemprop="price" content="{{ variant.price_min | money }}">
+
+    {% if product.available %}
+        <link itemprop="availability" href="//schema.org/InStock" />
+    {% else %}
+        <link itemprop="availability" href="//schema.org/OutOfStock" />
+    {% endif %}
+
+    <p class="price-container">
+        {% if variant.available == false or product.available == false %}
+            <span class="sold-out-label">{{ 'products.product.sold_out' | t }}</span>
+        {% elsif variant.compare_at_price > variant.price %}
+            <span class="old-price price money">{{ variant.compare_at_price | money }}</span>
+            <span class="new-price price money">{{ variant.price | money }}</span>
+            <span class="sale-percent">-{{ variant.compare_at_price | minus: product.price | times: 100.0 | divided_by: variant.compare_at_price | round }}%</span>
+        {% else %}
+            <span class="price money">{{ variant.price | money }}</span>
+        {% endif %}
+    </p>
+</div>

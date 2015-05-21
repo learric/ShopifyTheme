@@ -1,0 +1,15 @@
+<a href="{{ collection.url }}">
+    <figure>
+        {% if collection.image %}
+            {{ collection.image.src | collection_img_url: 'large' | img_tag: collection.image.alt }}
+        {% else %}
+            {% assign product = collection.products.first %}
+            {{ product.featured_image.src | product_img_url: 'large' | img_tag: product.featured_image.alt }}
+        {% endif %}
+    </figure>
+</a>
+
+<section class="info">
+    <p class="product-count">{{ collection.all_products_count }} {{ collection.all_products_count | pluralize: 'product', 'products' }}</p>
+    <a href="{{ collection.url }}" class="title">{{ collection.title }}</a>
+</section>

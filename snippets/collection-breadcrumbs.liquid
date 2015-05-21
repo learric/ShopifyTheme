@@ -1,0 +1,18 @@
+{% unless settings.disable_breadcrumbs %}
+    <nav class="breadcrumb">
+        <ol>
+            <li itemscope itemtype="//data-vocabulary.org/Breadcrumb">
+                <a href="/" itemprop="url"><span itemprop="title">{{ 'general.breadcrumbs.home' | t }}</span></a>
+            </li>
+
+            <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/">
+                <a href="/collections" itemprop="url"><span itemprop="title">{{ 'general.breadcrumbs.collections' | t }}</span></a>
+            </li>
+
+            <li itemscope itemtype="//data-vocabulary.org/Breadcrumb" data-breadcrumb-separator="/" class="active">
+                <meta itemprop="url" content="{{ collection.url }}">
+                <span itemprop="title">{{ collection.title }}</span>
+            </li>
+        </ol>
+    </nav>
+{% endunless %}

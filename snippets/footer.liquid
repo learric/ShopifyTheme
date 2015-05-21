@@ -1,0 +1,150 @@
+<footer role="contentinfo">
+    <div class="container">
+        <ul class="store-info unstyled-list">
+            {% if settings.footer_show_logo %}
+                <li class="logo">
+                    {% if settings.use_logo %}
+                        <a href="/">
+                            <img class="logo-regular" src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}">
+                            <img class="logo-retina" src="{{ 'logo_retina.png' | asset_url }}" alt="{{ shop.name }}" onerror="retinaDoesNotExist()">
+                        </a>
+                    {% else %}
+                        <a href="/">{{ shop.name }}</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+
+            {% if settings.footer_show_about_my_shop %}
+                <li>
+                    <h3>{{ 'layout.footer.about_my_shop_title' | t }}</h3>
+                    <p>{{ settings.footer_about_my_shop_text }}</p>
+                </li>
+            {% endif %}
+
+            {% if settings.footer_show_linklist %}
+                <li class="linklist">
+                    {% assign linklist = linklists[settings.footer_linklist_handle] %}
+
+                    <h3>{{ 'layout.footer.link_list_title' | t }}</h3>
+
+                    <ul class="unstyled-list">
+                        {% for link in linklist.links %}
+                            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>
+
+        <ul class="connect unstyled-list">
+            {% capture footer_social_links %}
+                {% if settings.twitter != blank %}
+                    <li>
+                        <a href="{{ settings.twitter }}"><i class="icon-twitter" title="Twitter"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.facebook != blank %}
+                    <li>
+                        <a href="{{ settings.facebook }}"><i class="icon-facebook" title="Facebook"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.google_plus != blank %}
+                    <li>
+                        <a href="{{ settings.google_plus }}"><i class="icon-google-plus" title="Google+"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.pinterest != blank %}
+                    <li>
+                        <a href="{{ settings.pinterest }}"><i class="icon-pinterest" title="Pinterest"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.instagram != blank %}
+                    <li>
+                        <a href="{{ settings.instagram }}"><i class="icon-instagram" title="Instagram"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.vimeo != blank %}
+                    <li>
+                        <a href="{{ settings.vimeo }}"><i class="icon-vimeo" title="Vimeo"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.tumblr != blank %}
+                    <li>
+                        <a href="{{ settings.tumblr }}"><i class="icon-tumblr" title="Tumblr"></i></a>
+                    </li>
+                {% endif %}
+
+                {% if settings.youtube != blank %}
+                    <li>
+                        <a href="{{ settings.youtube }}"><i class="icon-youtube" title="YouTube"></i></a>
+                    </li>
+                {% endif %}
+            {% endcapture %}
+
+            {% if settings.footer_show_social and footer_social_links != blank %}
+                <li>
+                    <h3>{{ 'layout.footer.social_networks_title' | t }}</h3>
+
+                    <ul class="social unstyled-list">
+                        {{ footer_social_links }}
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if settings.footer_show_contact %}
+                <li>
+                    <h3>{{ 'layout.footer.contact_title' | t }}</h3>
+                    <p>
+                        {% if settings.footer_phone_number != '' %}
+                            {{ 'layout.footer.call_us' | t }} {{ settings.footer_phone_number }}<br>
+                        {% endif %}
+
+                        {% if settings.footer_email_address %}
+                            <a href="mailto:{{ settings.footer_email_address }}">{{ settings.footer_email_address }}</a>
+                        {% endif %}
+                    </p>
+                </li>
+            {% endif %}
+
+            {% if settings.footer_show_newsletter %}
+                <li>
+                    <h3>{{ 'layout.footer.newsletter_title' | t }}</h3>
+
+                    <form action="{{ settings.mailchimp_form_action }}" method="post">
+                        <div class="newsletter-email">
+                            <input type="email" name="EMAIL" placeholder="{{ 'layout.footer.newsletter_placeholder' | t }}">
+                            <input type="submit" value="{{ 'layout.footer.newsletter_submit' | t }}">
+                        </div>
+                    </form>
+                </li>
+            {% endif %}
+        </ul>
+
+        <div class="copyright">
+            {% capture maestrooo %}<a href="http://maestrooo.com">Maestrooo</a>{% endcapture %}
+            <p class="about-us">{{ 'layout.footer.credits_html' | t: maestrooo: maestrooo }} / {{ powered_by_link }}</p>
+
+            <ul class="payment-methods unstyled-list">
+                {% assign payment_types = shop.enabled_payment_types %}
+
+                {% if payment_types contains 'visa' %}<li><i class="icon-visa" title="Visa"></i></li>{% endif %}
+                {% if payment_types contains 'master' %}<li><i class="icon-mastercard" title="MasterCard"></i></li>{% endif %}
+                {% if payment_types contains 'american_express' %}<li><i class="icon-amex" title="AMEX"></i></li>{% endif %}
+                {% if payment_types contains 'jcb' %}<li><i class="icon-jcb" title="JCB"></i></li>{% endif %}
+                {% if payment_types contains 'discover' %}<li><i class="icon-discover" title="Discover"></i></li>{% endif %}
+                {% if payment_types contains 'diners_club' %}<li><i class="icon-diners-club" title="Diners"></i></li>{% endif %}
+                {% if payment_types contains 'maestro' %}<li><i class="icon-maestro" title="Maestro"></i></li>{% endif %}
+                {% if payment_types contains 'stripe' %}<li><i class="icon-stripe" title="Stripe"></i></li>{% endif %}
+                {% if payment_types contains 'paypal' %}<li><i class="icon-paypal" title="PayPal"></i></li>{% endif %}
+                {% if payment_types contains 'google_wallet' %}<li><i class="icon-google-wallet" title="Google Wallet"></i></li>{% endif %}
+                {% if payment_types contains 'bitcoin' %}<li><i class="icon-bitcoin" title="BitCoin"></i></li>{% endif %}
+            </ul>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,59 @@
+<div class="custom-page">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ page.title }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <div class="inner">
+        {{page.content}}
+
+        <div id="instafeed" class="spacing-{{ settings.home_instagram_padding_between_images }} grid-{{ settings.home_instagram_images_per_rows }}"></div>
+    </div>
+</div>
+
+{% if settings.home_instagram_access_token != blank %}
+    <script type="text/javascript">
+        {% if settings.home_instagram_open_window_mode == '1' %}
+            {% assign template = '<div class="picture-wrapper"><a href="{{link}}"><div class="overlay"></div><img src="{{image}}"/></a></div>' %}
+        {% else %}
+            {% assign template = '<div class="picture-wrapper"><a href="{{link}}" target="_blank"><div class="overlay"></div><img src="{{image}}"/></a></div>' %}
+        {% endif %}
+
+        {% if settings.home_instagram_fetch_mode == '1' %}
+        var feed = new Instafeed({
+            get: 'user',
+            userId: {{ settings.home_instagram_user_id }},
+            accessToken: '{{ settings.home_instagram_access_token }}',
+            sortBy: 'most-recent',
+            limit: {{ settings.home_instagram_images_per_rows }} * {{ settings.home_instagram_count_rows }} * 3,
+            resolution: 'low_resolution',
+            template: '{{ template }}'
+        });
+        {% else %}
+        var feed = new Instafeed({
+            get: 'tagged',
+            tagName: '{{ settings.home_instagram_tag }}',
+            accessToken: '{{ settings.home_instagram_access_token }}',
+            sortBy: 'most-recent',
+            limit: {{ settings.home_instagram_images_per_rows }} * {{ settings.home_instagram_count_rows }} * 3,
+            resolution: 'low_resolution',
+            template: '{{ template }}'
+        });
+        {% endif %}
+
+        feed.run();
+    </script>
+{% endif %}

@@ -1,0 +1,71 @@
+<div class="account">
+    {% unless settings.disable_breadcrumbs %}
+    <footer>
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <a href="/">{{ 'general.breadcrumbs.home' | t }}</a>
+                </li>
+
+                <li data-breadcrumb-separator="/" class="active">
+                    {{ 'customer.account.title' | t }}
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    {% endunless %}
+
+    <h1 class="page-title">{{ 'customer.account.details' | t }}</h1>
+
+    <div class="inner">
+        <section class="customer-orders">
+            {% if customer.orders.size == 0 %}
+                <p class="alert-box alert-error">
+                    <span class="alert-title">{{ 'customer.orders.none' | t }}</span>
+                </p>
+            {% else %}
+                <table class="responsive">
+                    <thead>
+                        <tr>
+                            <th>{{ 'customer.orders.order_number' | t }}</th>
+                            <th>{{ 'customer.orders.date' | t }}</th>
+                            <th>{{ 'customer.orders.payment_status' | t }}</th>
+                            <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                            <th>{{ 'customer.orders.total' | t }}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for order in customer.orders %}
+                            <tr>
+                                <td>{{ order.name | link_to: order.customer_url }}</td>
+                                <td>{{ order.created_at | date: format: 'month_day_year' }}</td>
+                                <td>{{ order.financial_status_label }}</td>
+                                <td>{{ order.fulfillment_status_label }}</td>
+                                <td>{{ order.total_price | money }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </section>
+
+        <section class="customer-address main-address">
+            <h3 class="customer-name">{{ customer.name }}</h3>
+            <p class="customer-email">{{ customer.email }}</p>
+
+            <div class="address-details">
+                {% if customer.default_address != nil %}
+                    <p>{{ customer.default_address.address1 }}</p>
+                    {% if customer.default_address.address2 != "" %}
+                        <p>{{ customer.default_address.address2 }}</p>
+                    {% endif %}
+                    <p>{{ customer.default_address.city}}, {% if address.province_code %}{{customer.default_address.province_code}}, {% endif %}{{customer.default_address.country}}</p>
+                    <p>{{ customer.default_address.zip}}</p>
+                    <p>{{ customer.default_address.phone }}</p>
+                {% endif %}
+                <a href="/account/addresses" class="highlight">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a>
+            </div>
+        </section>
+    </div>
+</div>
