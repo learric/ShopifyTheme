@@ -1,9 +1,13 @@
-Client: Twin Turtle Tees   
-Site: twinturtletees.com   
-Project: Theme Customization   
-   
-Start up:   
->	Pull down current theme version with 'theme download'   
->	Run current version of theme with 'theme open'   
->	Edit theme in real time with 'theme watch'   
+<b>Client:</b> Twin Turtle Tees
 
+<b>Site:</b> twinturtletees.com
+
+<b>Project:</b> Theme Customization
+
+<b>Start up:</b>
+
+>	Pull down current theme version with 'theme download'
+
+>	Run current version of theme with 'theme open'
+
+>	Edit theme in real time with 'theme watch'
